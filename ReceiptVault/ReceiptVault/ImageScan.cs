@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Devices.PointOfService;
 using Windows.Graphics.Imaging;
 using Windows.Media.Ocr;
@@ -25,44 +26,56 @@ namespace ReceiptVault
         private String scannedText;
         private int[,] position;
 
-        private WriteableBitmap bitmap;
-
         public ImageScan(int[,] position)
         {
             this.position = position;
-            Debug.WriteLine("position size: " + position.Length);
-           // engine = new OcrEngine()
+            //Debug.WriteLine("position size: " + position.Length);
+            //engine = new OcrEngine()
 
             foreach (var lang in Windows.Media.Ocr.OcrEngine.AvailableRecognizerLanguages)
             {
-                Debug.WriteLine(lang.DisplayName.ToString());
+                //Debug.WriteLine(lang.DisplayName.ToString());
             }
+
+            recognize(position);
 
         }
 
         public async void recognize(int[,] position)
         {
-            FileOpenPicker picker = new FileOpenPicker();
-            picker.FileTypeFilter.Add(".bmp");
-            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            StorageFile file = await picker.PickSingleFileAsync();
-            ImageProperties imgProp = await file.Properties.GetImagePropertiesAsync();
+            var ocrEngine = OcrEngine.TryCreateFromLanguage(new Windows.Globalization.Language("en"));
 
-            using (var stream = await file.OpenAsync(FileAccessMode.Read))
+            // var file = await StorageFolder.GetFileAsync(Package.Current.InstalledLocation.Path + @"\Assets\testBonnetjePleaseDelete.bmp");
+
+            var file = await Package.Current.InstalledLocation.GetFileAsync(@"Assets\testBonnetje.bmp");
+           // Debug.WriteLine(file);
+
+
+
+            using (var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
             {
-                bitmap = new WriteableBitmap((int) imgProp.Width, (int)imgProp.Height);
-                bitmap.SetSource(stream);
-               // ImagePreview.Source = bitmap;
-            }
+                Debug.WriteLine("dit werkt");
+                // Create image decoder.
+                var decoder = await BitmapDecoder.CreateAsync(stream);
 
-            OcrEngine ocrEngine = OcrEngine.TryCreateFromUserProfileLanguages();
+                // Load bitmap.
+                 var bitmap = await decoder.GetSoftwareBitmapAsync();
+            
+                // Extract text from image.
+                OcrResult result = await ocrEngine.RecognizeAsync(bitmap);
 
-            //"elke tutorial: 'OcrResult result = await ocrEngine.RecognizeAsync(height, width, pixels);'... helaas.
-
-          //  OcrResult ocrResult = await ocrEngine.RecognizeAsync();
-
-          //  Debug.WriteLine(ocrResult.Text);
-
+                // Return recognized text.
+                Debug.WriteLine(result.Text);
+            } 
         }
+
+
+        //"elke tutorial: 'OcrResult result = await ocrEngine.RecognizeAsync(height, width, pixels);'... helaas.
+
+        //  OcrResult ocrResult = await ocrEngine.RecognizeAsync();
+
+        //  Debug.WriteLine(ocrResult.Text);
+
     }
 }
+
