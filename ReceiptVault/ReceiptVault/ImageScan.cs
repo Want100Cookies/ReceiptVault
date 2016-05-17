@@ -15,6 +15,8 @@ using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.UI.Input;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Shapes;
+using System.Drawing;
 
 namespace ReceiptVault
 {
@@ -50,6 +52,7 @@ namespace ReceiptVault
             var file = await Package.Current.InstalledLocation.GetFileAsync(@"Assets\testBonnetje.bmp");
            // Debug.WriteLine(file);
 
+            //hier de file gaan croppen.
 
 
             using (var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
@@ -69,12 +72,14 @@ namespace ReceiptVault
             } 
         }
 
+        public Bitmap CropBitmap(Bitmap bitmap, int cropX, int cropY, int cropWidth, int cropHeight)
+        {
+            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(cropX, cropY, cropWidth, cropHeight);
+            Bitmap cropped = bitmap.Clone(rect, bitmap.PixelFormat);
+            return cropped;
+        }
 
-        //"elke tutorial: 'OcrResult result = await ocrEngine.RecognizeAsync(height, width, pixels);'... helaas.
 
-        //  OcrResult ocrResult = await ocrEngine.RecognizeAsync();
-
-        //  Debug.WriteLine(ocrResult.Text);
 
     }
 }
