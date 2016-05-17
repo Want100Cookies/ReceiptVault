@@ -18,12 +18,10 @@ namespace ReceiptVault
         {
             using (var db = DbConnection)
             {
-                db.TraceListener = new DebugTraceListener();
-
+                //db.TraceListener = new DebugTraceListener();
                 var c = db.CreateTable<Entry>();
-                var info = db.GetMapping(typeof(Entry));
-
-                Debug.WriteLine(info.Columns);
+                //var info = db.GetMapping(typeof(Entry));
+                //Debug.WriteLine(info.Columns);
             }
         }
 
@@ -31,7 +29,67 @@ namespace ReceiptVault
             new SQLitePlatformWinRT(), 
             Path.Combine(ApplicationData.Current.LocalFolder.Path, "Storage.sqlite"));
 
-        internal class Entry
+        public bool SaveEntry(Entry entry)
+        {
+            using (var db = DbConnection)
+            {
+                db.TraceListener = new DebugTraceListener();
+
+                if (entry.Id != default(int))
+                {
+                    var s = db.Update(entry);
+                    return s == 1;
+                }
+                else
+                {
+                    var s = db.Insert(entry);
+                    return s == 1;
+                }
+            }
+        }
+
+        public Entry RetrieveEntry(int Id)
+        {
+            using (var db = DbConnection)
+            {
+                db.TraceListener = new DebugTraceListener();
+
+                return db.Table<Entry>().First(v => v.Id.Equals(Id));
+            }
+        }
+
+        public Entry[] RetrieveEntry(DateTime startDate, DateTime endDate)
+        {
+            using (var db = DbConnection)
+            {
+                db.TraceListener = new DebugTraceListener();
+
+                return db.Table<Entry>().Where(s => s.Date >= startDate
+                                                          && s.Date <= endDate).ToArray();
+            }
+        }
+
+        public Entry[] RetrieveEntry()
+        {
+            using (var db = DbConnection)
+            {
+                db.TraceListener = new DebugTraceListener();
+
+                return db.Table<Entry>().ToArray();
+            }
+        }
+
+        public Entry[] RetrieveEntry(string storeName)
+        {
+            using (var db = DbConnection)
+            {
+                db.TraceListener = new DebugTraceListener();
+
+                return db.Table<Entry>().Where(s => s.StoreName == storeName).ToArray();
+            }
+        }
+
+        public class Entry
         {
             [PrimaryKey, AutoIncrement]
             public int Id { get; set; }
