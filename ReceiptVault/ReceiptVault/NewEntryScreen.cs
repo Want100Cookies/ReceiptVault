@@ -23,6 +23,9 @@ namespace ReceiptVault
 
         }
 
+        /// <summary>
+        /// This method used to take a picture from the webcam, and save it to a picturebox.
+        /// </summary>
         public void takePicture()
         {
 

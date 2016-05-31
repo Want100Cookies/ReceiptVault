@@ -16,7 +16,7 @@ using Windows.Storage.Pickers;
 using Windows.UI.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
-using System.Drawing;
+
 
 namespace ReceiptVault
 {
@@ -71,13 +71,13 @@ namespace ReceiptVault
                 Debug.WriteLine(result.Text);
             } 
         }
-
+        /**
         public Bitmap CropBitmap(Bitmap bitmap, int cropX, int cropY, int cropWidth, int cropHeight)
         {
             System.Drawing.Rectangle rect = new System.Drawing.Rectangle(cropX, cropY, cropWidth, cropHeight);
             Bitmap cropped = bitmap.Clone(rect, bitmap.PixelFormat);
             return cropped;
-        }
+        } ***/
 
 
 

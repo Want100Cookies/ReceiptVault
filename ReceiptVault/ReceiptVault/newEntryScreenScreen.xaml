@@ -1,0 +1,18 @@
+﻿<Page
+    x:Class="ReceiptVault.newEntryScreen"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ReceiptVault"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Image x:Name="imgNewReceipt" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="200" Margin="55,10,0,0"/>
+        <Button x:Name="button" Content="Maak foto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="55,288,0,0" Click="button_Click"/>
+        <Image x:Name="testPic" Width="200" Height="200" Margin="361,43,79,117"/>
+
+        <MediaElement x:Name="mediaPreivew"
+              Width="320" />
+    </Grid>
+</Page>

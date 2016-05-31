@@ -31,5 +31,10 @@ namespace ReceiptVault
         {
             ImageScan scan = new ImageScan(new int[,] { {1,2}, {3,4} });
         }
+
+        private void buttonNewReceipt_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(newEntryScreen));
+        }
     }
 }
