@@ -8,9 +8,15 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Image x:Name="imgNewReceipt" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="200" Margin="55,10,0,0"/>
-        <Button x:Name="button" Content="Maak foto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="55,288,0,0" Click="button_Click"/>
-        <Image x:Name="testPic" Width="200" Height="200" Margin="361,43,79,117"/>
+
+        <Rectangle Margin="0,5,0,0" Height="1" Fill="#ff0000" Visibility="Collapsed"/>
+        <Canvas Height="300" Margin="5" x:Name="canvas" Width="480">
+            <Image x:Name="imgNewReceipt" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="200" Margin="88,10,0,0" PointerPressed="dragStart" PointerReleased="dragFinish" PointerMoved="dragMove"/>
+            <Rectangle x:Name="rect" StrokeThickness="4" Stroke="#FFEA18A7"></Rectangle>
+
+        </Canvas>
+
+        <Button x:Name="button" Content="Maak foto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="88,283,0,0" Click="button_Click"/>
 
         <MediaElement x:Name="mediaPreivew"
               Width="320" />
