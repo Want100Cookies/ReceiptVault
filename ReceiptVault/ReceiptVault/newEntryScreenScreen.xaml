@@ -11,8 +11,8 @@
 
         <Rectangle Margin="0,5,0,0" Height="1" Fill="#ff0000" Visibility="Collapsed"/>
         <Canvas Height="300" Margin="5" x:Name="canvas" Width="480">
-            <Image x:Name="imgNewReceipt" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="200" Margin="88,10,0,0" PointerPressed="dragStart" PointerReleased="dragFinish" PointerMoved="dragMove"/>
-            <Rectangle x:Name="rect" StrokeThickness="4" Stroke="#FFEA18A7"></Rectangle>
+            <Image x:Name="imgNewReceipt" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="200" PointerPressed="dragStart" PointerReleased="dragFinish" PointerMoved="dragMove"/>
+            <Rectangle x:Name="rect" StrokeThickness="3" Stroke="#ff0000"></Rectangle>
 
         </Canvas>
 

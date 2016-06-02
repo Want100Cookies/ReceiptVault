@@ -39,6 +39,15 @@ namespace ReceiptVault
                 //Debug.WriteLine(lang.DisplayName.ToString());
             }
 
+            Debug.WriteLine("position content:");
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    Debug.WriteLine(position[i, j]);
+                }
+            }
+
             recognize(position);
 
         }
