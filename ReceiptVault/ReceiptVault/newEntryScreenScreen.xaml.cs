@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -100,8 +101,8 @@ namespace ReceiptVault
             }
 
             //image saven:
-            Debug.WriteLine("image proberen te saven");
-            await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.bmp", NameCollisionOption.GenerateUniqueName);
+            Debug.WriteLine("image proberen te saven in " + ApplicationData.Current.LocalFolder);
+            await photo.CopyAsync(Package.Current.InstalledLocation.Path., "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
             Debug.WriteLine("image saved");
 
             IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
