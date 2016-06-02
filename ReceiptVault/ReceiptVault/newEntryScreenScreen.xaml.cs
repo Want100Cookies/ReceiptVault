@@ -59,6 +59,7 @@ namespace ReceiptVault
             rect.SetValue(Canvas.TopProperty, (dragStartPos[1] < dragFinishPos[1]) ? dragStartPos[1] : dragFinishPos[1]);
             rect.Width = (int)Math.Abs(dragFinishPos[0] - dragStartPos[0]);
             rect.Height = (int)Math.Abs(dragFinishPos[1] - dragStartPos[1]);
+            //shit werkt niet
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
