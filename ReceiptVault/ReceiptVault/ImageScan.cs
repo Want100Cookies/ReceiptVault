@@ -20,9 +20,6 @@ using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
-using System.Runtime.InteropServices.WindowsRuntime;
-
-
 
 namespace ReceiptVault
 {
@@ -31,7 +28,7 @@ namespace ReceiptVault
      */
     class ImageScan
     {
-        private String scannedText;
+        private string scannedText = "";
         private int[,] position;
 
         /// <summary>
@@ -145,11 +142,11 @@ namespace ReceiptVault
                 WriteableBitmap cropBmp = new WriteableBitmap((int)width, (int)height);
                 Stream pixStream = cropBmp.PixelBuffer.AsStream();
                 pixStream.Write(pixels, 0, (int)(width * height * 4));
+                
 
-                croppedImage = await WriteableBitmapToStorageFile(cropBmp, FileFormat.Bmp);
-                Debug.WriteLine("Imagecropped! " + croppedImage.ToString());
+                croppedImage = await WriteableBitmapToStorageFile(cropBmp);
+                Debug.WriteLine("Imagecropped! " + croppedImage);
             }
-
 
             //ocr gedeelte:
             using (var stream = await croppedImage.OpenAsync(Windows.Storage.FileAccessMode.Read))
@@ -164,8 +161,6 @@ namespace ReceiptVault
                 // Extract text from image.
                 OcrResult result = await ocrEngine.RecognizeAsync(bitmap);
 
-                scannedText = result.Text;
-
                 if (result.Text == "")
                 {
                     Debug.WriteLine("Er is geen tekst herkent, zorg dat het bonnetje duidelijk op de foto staat.");
@@ -173,77 +168,41 @@ namespace ReceiptVault
                 else
                 {
                     // Return recognized text.
+                    scannedText = result.Text;
                     Debug.WriteLine(result.Text);
                 }
             } 
         }
 
-        public String getScannedText()
+        public string getScannedText()
         {
             return scannedText;
         }
-
-
-private async Task<StorageFile> WriteableBitmapToStorageFile(WriteableBitmap WB, FileFormat fileFormat)
-    {
-        string FileName = "MyFile.";
-        Guid BitmapEncoderGuid = BitmapEncoder.JpegEncoderId;
-        switch (fileFormat)
+        
+        private async Task<StorageFile> WriteableBitmapToStorageFile(WriteableBitmap WB)
         {
-            case FileFormat.Jpeg:
-                FileName += "jpeg";
-                BitmapEncoderGuid = BitmapEncoder.JpegEncoderId;
-                break;
+            string FileName = "receipts.";
+            FileName += "bmp";
+            Guid BitmapEncoderGuid = BitmapEncoder.BmpEncoderId;
+            
+            var file = await Windows.Storage.ApplicationData.Current.TemporaryFolder.CreateFileAsync(FileName, CreationCollisionOption.GenerateUniqueName);
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoderGuid, stream);
+                Stream pixelStream = WB.PixelBuffer.AsStream();
+                byte[] pixels = new byte[pixelStream.Length];
+                await pixelStream.ReadAsync(pixels, 0, pixels.Length);
 
-            case FileFormat.Png:
-                FileName += "png";
-                BitmapEncoderGuid = BitmapEncoder.PngEncoderId;
-                break;
-
-            case FileFormat.Bmp:
-                FileName += "bmp";
-                BitmapEncoderGuid = BitmapEncoder.BmpEncoderId;
-                break;
-
-            case FileFormat.Tiff:
-                FileName += "tiff";
-                BitmapEncoderGuid = BitmapEncoder.TiffEncoderId;
-                break;
-
-            case FileFormat.Gif:
-                FileName += "gif";
-                BitmapEncoderGuid = BitmapEncoder.GifEncoderId;
-                break;
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
+                                    (uint)WB.PixelWidth,
+                                    (uint)WB.PixelHeight,
+                                    96.0,
+                                    96.0,
+                                    pixels);
+                await encoder.FlushAsync();
+            }
+            return file;
         }
-
-        var file = await Windows.Storage.ApplicationData.Current.TemporaryFolder.CreateFileAsync(FileName, CreationCollisionOption.GenerateUniqueName);
-        using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
-        {
-            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoderGuid, stream);
-            Stream pixelStream = WB.PixelBuffer.AsStream();
-            byte[] pixels = new byte[pixelStream.Length];
-            await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-
-            encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
-                                (uint)WB.PixelWidth,
-                                (uint)WB.PixelHeight,
-                                96.0,
-                                96.0,
-                                pixels);
-            await encoder.FlushAsync();
-        }
-        return file;
     }
-
-    private enum FileFormat
-    {
-        Jpeg,
-        Png,
-        Bmp,
-        Tiff,
-        Gif
-    }
-
-}
 }
 

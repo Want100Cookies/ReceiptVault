@@ -147,8 +147,7 @@ namespace ReceiptVault
                 dragFinishPos[1] = Convert.ToInt32(e.GetCurrentPoint(imgNewReceipt).Position.Y);
 
                 //Debug.WriteLine("moving... x, y: " + dragFinishPos[0] + ", " + dragFinishPos[1]);
-
-
+                
                 CompositionTarget_Rendering(sender, null);
             }
 
@@ -166,11 +165,13 @@ namespace ReceiptVault
 
             //note: deze is best pijnlijk...
             ImageScan scan = new ImageScan(new int[2,2] { {dragStartPos[0], dragStartPos[1] }, {dragFinishPos[0], dragFinishPos[1]} }, photo);
+            //note: dit gebeurt niet, denk dat de methode te vroeg wordt aangeroepen...
+            textBoxTotal.Text = scan.getScannedText();
         }
 
         public void homeClicked()
         {
-
+            this.Frame.Navigate(typeof(MainPage));
         }
 
         public void spendingsClicked()
@@ -181,6 +182,16 @@ namespace ReceiptVault
         public void VATClicked()
         {
 
+        }
+
+        private void buttonAccept_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void textBlockHome_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            homeClicked();
         }
     }
 }

@@ -105,6 +105,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainScreen.cs" />
+    <Compile Include="navigator.cs" />
     <Compile Include="newEntryScreenScreen.xaml.cs">
       <DependentUpon>newEntryScreenScreen.xaml</DependentUpon>
     </Compile>
