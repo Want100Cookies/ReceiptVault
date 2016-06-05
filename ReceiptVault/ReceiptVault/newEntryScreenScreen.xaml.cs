@@ -34,9 +34,10 @@ namespace ReceiptVault
         private int[] dragStartPos;
         private int[] dragFinishPos;
         private EntryStore.Entry entry;
-
+        
         //note: deze staat niet in de class diagram, maar is wel nodig:
         private Boolean dragging;
+        private StorageFile photo;
 
         public newEntryScreen()
         {
@@ -67,9 +68,10 @@ namespace ReceiptVault
             rect.Width = (int) Math.Abs(dragFinishPos[0] - dragStartPos[0]);
             rect.Height = (int) Math.Abs(dragFinishPos[1] - dragStartPos[1]);
 
-            Debug.WriteLine("W: " + rect.Width);
-            Debug.WriteLine("width finish, width start" + dragFinishPos[0] + ", " + dragStartPos[0]);
-            Debug.WriteLine("H: " + rect.Height);
+            //note: data for debugging, please delete
+            //Debug.WriteLine("W: " + rect.Width);
+            //Debug.WriteLine("width finish, width start" + dragFinishPos[0] + ", " + dragStartPos[0]);
+            //Debug.WriteLine("H: " + rect.Height);
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -102,7 +104,9 @@ namespace ReceiptVault
 
             //image saven:
             Debug.WriteLine("image proberen te saven in " + ApplicationData.Current.LocalFolder);
-            await photo.CopyAsync(Package.Current.InstalledLocation.Path., "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
+            //note: dit gaan linken met iets in de db.
+            await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
+            this.photo = photo;
             Debug.WriteLine("image saved");
 
             IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
@@ -142,7 +146,7 @@ namespace ReceiptVault
                 dragFinishPos[0] = Convert.ToInt32(e.GetCurrentPoint(imgNewReceipt).Position.X);
                 dragFinishPos[1] = Convert.ToInt32(e.GetCurrentPoint(imgNewReceipt).Position.Y);
 
-                Debug.WriteLine("moving... x, y: " + dragFinishPos[0] + ", " + dragFinishPos[1]);
+                //Debug.WriteLine("moving... x, y: " + dragFinishPos[0] + ", " + dragFinishPos[1]);
 
 
                 CompositionTarget_Rendering(sender, null);
@@ -161,7 +165,7 @@ namespace ReceiptVault
             Debug.WriteLine("dragFinishPos: " + dragFinishPos[0].ToString() + ", " + dragFinishPos[1].ToString());
 
             //note: deze is best pijnlijk...
-            ImageScan scan = new ImageScan(new int[2,2] { {dragStartPos[0], dragStartPos[1] }, {dragFinishPos[0], dragFinishPos[1]} });
+            ImageScan scan = new ImageScan(new int[2,2] { {dragStartPos[0], dragStartPos[1] }, {dragFinishPos[0], dragFinishPos[1]} }, photo);
         }
 
         public void homeClicked()
