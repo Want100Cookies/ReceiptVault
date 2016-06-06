@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel;
+using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
@@ -20,8 +22,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-
-
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace ReceiptVault
@@ -34,16 +34,19 @@ namespace ReceiptVault
         private int[] dragStartPos;
         private int[] dragFinishPos;
         private EntryStore.Entry entry;
-
+        
         //note: deze staat niet in de class diagram, maar is wel nodig:
         private Boolean dragging;
+        private StorageFile photo;
 
         public newEntryScreen()
         {
             this.InitializeComponent();
             Debug.WriteLine("Het werkt");
 
-            dragStartPos = dragFinishPos = new int[2];
+            //note: dragStartPos = dragFinishPos = new int[2]; is nooit een goed idee geweest.
+            dragStartPos = new int[2];
+            dragFinishPos = new int[2];
         }
 
         /// <summary>
@@ -57,13 +60,23 @@ namespace ReceiptVault
             //Used for rendering the cropping rectangle on the image. 
             rect.SetValue(Canvas.LeftProperty, (dragStartPos[0] < dragFinishPos[0]) ? dragStartPos[0] : dragFinishPos[0]);
             rect.SetValue(Canvas.TopProperty, (dragStartPos[1] < dragFinishPos[1]) ? dragStartPos[1] : dragFinishPos[1]);
-            rect.Width = (int)Math.Abs(dragFinishPos[0] - dragStartPos[0]);
-            rect.Height = (int)Math.Abs(dragFinishPos[1] - dragStartPos[1]);
+            //dit hierboven werkt
+
+
+            //dit niet:
+
+            rect.Width = (int) Math.Abs(dragFinishPos[0] - dragStartPos[0]);
+            rect.Height = (int) Math.Abs(dragFinishPos[1] - dragStartPos[1]);
+
+            //note: data for debugging, please delete
+            //Debug.WriteLine("W: " + rect.Width);
+            //Debug.WriteLine("width finish, width start" + dragFinishPos[0] + ", " + dragStartPos[0]);
+            //Debug.WriteLine("H: " + rect.Height);
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-             takePicture();
+            takePicture();
         }
 
         public void acceptEntry()
@@ -89,13 +102,20 @@ namespace ReceiptVault
                 return;
             }
 
+            //image saven:
+            Debug.WriteLine("image proberen te saven in " + ApplicationData.Current.LocalFolder);
+            //note: dit gaan linken met iets in de db.
+            await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
+            this.photo = photo;
+            Debug.WriteLine("image saved");
+
             IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
             BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
             SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
             SoftwareBitmap softwareBitmapBGR8 = SoftwareBitmap.Convert(softwareBitmap,
-            BitmapPixelFormat.Bgra8,
-            BitmapAlphaMode.Premultiplied);
+                BitmapPixelFormat.Bgra8,
+                BitmapAlphaMode.Premultiplied);
 
             SoftwareBitmapSource bitmapSource = new SoftwareBitmapSource();
             await bitmapSource.SetBitmapAsync(softwareBitmapBGR8);
@@ -106,7 +126,7 @@ namespace ReceiptVault
         {
             Debug.WriteLine("dragStart");
             dragging = true;
-            
+
             dragStartPos[0] = Convert.ToInt32(e.GetCurrentPoint(imgNewReceipt).Position.X);
             dragStartPos[1] = Convert.ToInt32(e.GetCurrentPoint(imgNewReceipt).Position.Y);
 
@@ -115,7 +135,22 @@ namespace ReceiptVault
 
             rect.Visibility = Visibility.Visible;
 
-            Debug.WriteLine("dragStartPost: " + dragStartPos[0].ToString() + ", " +dragStartPos[1].ToString());
+            Debug.WriteLine("dragStartPost: " + dragStartPos[0].ToString() + ", " + dragStartPos[1].ToString());
+        }
+
+        public void dragMove(object sender, PointerRoutedEventArgs e)
+        {
+            if (dragging)
+            {
+                //Debug.WriteLine("drag move");
+                dragFinishPos[0] = Convert.ToInt32(e.GetCurrentPoint(imgNewReceipt).Position.X);
+                dragFinishPos[1] = Convert.ToInt32(e.GetCurrentPoint(imgNewReceipt).Position.Y);
+
+                //Debug.WriteLine("moving... x, y: " + dragFinishPos[0] + ", " + dragFinishPos[1]);
+                
+                CompositionTarget_Rendering(sender, null);
+            }
+
         }
 
         public void dragFinish(object sender, PointerRoutedEventArgs e)
@@ -128,24 +163,15 @@ namespace ReceiptVault
 
             Debug.WriteLine("dragFinishPos: " + dragFinishPos[0].ToString() + ", " + dragFinishPos[1].ToString());
 
-        }
-
-        public void dragMove(object sender, PointerRoutedEventArgs e)
-        {
-            if (dragging)
-            {
-                //Debug.WriteLine("drag move");
-                dragFinishPos[0] = Convert.ToInt32(e.GetCurrentPoint(imgNewReceipt).Position.X);
-                dragFinishPos[1] = Convert.ToInt32(e.GetCurrentPoint(imgNewReceipt).Position.Y);
-
-                CompositionTarget_Rendering(sender, null);
-            }
-
+            //note: deze is best pijnlijk...
+            ImageScan scan = new ImageScan(new int[2,2] { {dragStartPos[0], dragStartPos[1] }, {dragFinishPos[0], dragFinishPos[1]} }, photo);
+            //note: dit gebeurt niet, denk dat de methode te vroeg wordt aangeroepen...
+            textBoxTotal.Text = scan.getScannedText();
         }
 
         public void homeClicked()
         {
-
+            this.Frame.Navigate(typeof(MainPage));
         }
 
         public void spendingsClicked()
@@ -156,6 +182,16 @@ namespace ReceiptVault
         public void VATClicked()
         {
 
+        }
+
+        private void buttonAccept_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void textBlockHome_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            homeClicked();
         }
     }
 }

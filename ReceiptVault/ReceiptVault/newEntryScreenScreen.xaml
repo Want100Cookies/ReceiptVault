@@ -5,20 +5,34 @@
     xmlns:local="using:ReceiptVault"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Height="1088" Width="2256">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
         <Rectangle Margin="0,5,0,0" Height="1" Fill="#ff0000" Visibility="Collapsed"/>
-        <Canvas Height="300" Margin="5" x:Name="canvas" Width="480">
-            <Image x:Name="imgNewReceipt" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="200" Margin="88,10,0,0" PointerPressed="dragStart" PointerReleased="dragFinish" PointerMoved="dragMove"/>
-            <Rectangle x:Name="rect" StrokeThickness="4" Stroke="#FFEA18A7"></Rectangle>
-
+        <Canvas Margin="429,10,10,150" x:Name="canvas">
+            <Image x:Name="imgNewReceipt" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="200" PointerPressed="dragStart" PointerReleased="dragFinish" PointerMoved="dragMove"/>
+            <Rectangle x:Name="rect" StrokeThickness="3" Stroke="#ff0000"></Rectangle>
+            <Image x:Name="imageCropped" Height="151" Width="145" Canvas.Left="-199" Canvas.Top="49" x:FieldModifier="public"/>
         </Canvas>
 
-        <Button x:Name="button" Content="Maak foto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="88,283,0,0" Click="button_Click"/>
+        <Button x:Name="button" Content="Maak foto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="180,289,0,0" Click="button_Click"/>
 
         <MediaElement x:Name="mediaPreivew"
               Width="320" />
+        <TextBox x:Name="textBoxTotal" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="485,215,0,0" Width="145" PlaceholderText="-"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="390,227,0,0" TextWrapping="Wrap" Text="Totaal bedrag
+                   " VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxShopName" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="485,255,0,0" Width="145" PlaceholderText="-"/>
+        <TextBlock x:Name="textBlock_Copy" HorizontalAlignment="Left" Margin="390,267,0,0" TextWrapping="Wrap" Text="Winkel naam" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxDate" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="485,299,0,0" Width="145" PlaceholderText="-"/>
+        <TextBlock x:Name="textBlock_Copy1" HorizontalAlignment="Left" Margin="390,311,0,0" TextWrapping="Wrap" Text="Datum" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxDateVAT" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="485,340,0,0" Width="145" PlaceholderText="-"/>
+        <TextBlock x:Name="textBlock_Copy2" HorizontalAlignment="Left" Margin="390,352,0,0" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top"/>
+        <Button x:Name="buttonAccept" Content="Accepteren" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="530,377,0,0" Height="32" Width="100" Click="buttonAccept_Click"/>
+        <RelativePanel HorizontalAlignment="Left" Height="1088" VerticalAlignment="Top" Width="268">
+            <TextBlock x:Name="textBlockHome" TextWrapping="Wrap" Text="Home" Tapped="textBlockHome_Tapped" FontSize="22" FontWeight="Bold" Margin="14,50,-242,-102" RenderTransformOrigin="0.505,0.507" />
+        </RelativePanel>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="100" Margin="331,163,0,0" VerticalAlignment="Top" Width="100"/>
     </Grid>
 </Page>
