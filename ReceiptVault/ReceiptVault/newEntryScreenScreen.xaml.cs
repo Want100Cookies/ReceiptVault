@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Devices.Input;
 using Windows.Foundation;
@@ -34,10 +36,20 @@ namespace ReceiptVault
         private int[] dragStartPos;
         private int[] dragFinishPos;
         private EntryStore.Entry entry;
-        
+
         //note: deze staat niet in de class diagram, maar is wel nodig:
         private Boolean dragging;
         private StorageFile photo;
+
+        //i'll go to h... for this.
+        public byte[] receipt;
+
+        //field to edit the value of textBoxTotal.
+        public string total
+        {
+            get { return textBoxTotal.Text; }
+            set { textBoxTotal.Text = value; }
+        }
 
         public newEntryScreen()
         {
@@ -57,21 +69,11 @@ namespace ReceiptVault
         private void CompositionTarget_Rendering(object sender, object args)
         {
             //Used for rendering the cropping rectangle on the image. 
-            //Used for rendering the cropping rectangle on the image. 
             rect.SetValue(Canvas.LeftProperty, (dragStartPos[0] < dragFinishPos[0]) ? dragStartPos[0] : dragFinishPos[0]);
             rect.SetValue(Canvas.TopProperty, (dragStartPos[1] < dragFinishPos[1]) ? dragStartPos[1] : dragFinishPos[1]);
-            //dit hierboven werkt
-
-
-            //dit niet:
-
+            
             rect.Width = (int) Math.Abs(dragFinishPos[0] - dragStartPos[0]);
             rect.Height = (int) Math.Abs(dragFinishPos[1] - dragStartPos[1]);
-
-            //note: data for debugging, please delete
-            //Debug.WriteLine("W: " + rect.Width);
-            //Debug.WriteLine("width finish, width start" + dragFinishPos[0] + ", " + dragStartPos[0]);
-            //Debug.WriteLine("H: " + rect.Height);
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -97,13 +99,13 @@ namespace ReceiptVault
 
             if (photo == null)
             {
-                // User cancelled photo capture
-                System.Diagnostics.Debug.WriteLine("photo = null");
+                //User cancelled photo capture
+                Debug.WriteLine("photo = null");
                 return;
             }
 
             //image saven:
-            Debug.WriteLine("image proberen te saven in " + ApplicationData.Current.LocalFolder);
+            //Debug.WriteLine("image proberen te saven in " + ApplicationData.Current.LocalFolder);
             //note: dit gaan linken met iets in de db.
             await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
             this.photo = photo;
@@ -120,6 +122,17 @@ namespace ReceiptVault
             SoftwareBitmapSource bitmapSource = new SoftwareBitmapSource();
             await bitmapSource.SetBitmapAsync(softwareBitmapBGR8);
             imgNewReceipt.Source = bitmapSource;
+        }
+
+        private static async Task<BitmapImage> LoadImage(StorageFile file)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+            FileRandomAccessStream stream = (FileRandomAccessStream)await file.OpenAsync(FileAccessMode.Read);
+
+            bitmapImage.SetSource(stream);
+
+            return bitmapImage;
+
         }
 
         public void dragStart(object sender, PointerRoutedEventArgs e)
@@ -164,9 +177,20 @@ namespace ReceiptVault
             Debug.WriteLine("dragFinishPos: " + dragFinishPos[0].ToString() + ", " + dragFinishPos[1].ToString());
 
             //note: deze is best pijnlijk...
-            ImageScan scan = new ImageScan(new int[2,2] { {dragStartPos[0], dragStartPos[1] }, {dragFinishPos[0], dragFinishPos[1]} }, photo);
+            ImageScan scan = new ImageScan(new int[2,2] { {dragStartPos[0], dragStartPos[1] }, {dragFinishPos[0], dragFinishPos[1]} }, photo, this);
+
+
+        //    while (scan.getScannedText().Equals("waiting"))
+            {
+                
+            }
+
             //note: dit gebeurt niet, denk dat de methode te vroeg wordt aangeroepen...
             textBoxTotal.Text = scan.getScannedText();
+
+            //receipt = scan.GetReceipt();
+           // Debug.WriteLine(receipt.ToString());
+            Debug.WriteLine("Invoerveld in aangepast nu.");
         }
 
         public void homeClicked()
@@ -186,12 +210,20 @@ namespace ReceiptVault
 
         private void buttonAccept_Click(object sender, RoutedEventArgs e)
         {
+            entry = new EntryStore.Entry();
+            entry.Date = DateTime.Now;
+            entry.Receipt = receipt;
+            entry.StoreName = textBoxShopName.Text;
+            entry.VATpercentage = Int32.Parse(textBoxVAT.Text);
             
+
+
         }
 
         private void textBlockHome_Tapped(object sender, TappedRoutedEventArgs e)
         {
             homeClicked();
         }
+
     }
 }
