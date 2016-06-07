@@ -17,9 +17,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace ReceiptVault
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+  
+
     public sealed partial class MainPage : Page
     {
         public MainPage()
@@ -36,5 +35,12 @@ namespace ReceiptVault
         {
             this.Frame.Navigate(typeof(newEntryScreen));
         }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(VATScreen));
+        }
+
+    
     }
 }
