@@ -16,6 +16,7 @@ namespace ReceiptVault
     {
         public String Name { get; set; }
         public int Amount { get; set; }
+       
     }
 
     public sealed partial class VATScreen : Page
@@ -35,7 +36,7 @@ namespace ReceiptVault
         private void LoadChartContents()
         {
             List<TestStore> listSource = new List<TestStore>();
-            listSource.Add(new TestStore() { Name = "Abert Hein", Amount = 23 });
+            listSource.Add(new TestStore() { Name = "Abert Hein", Amount = 0 });
             listSource.Add(new TestStore() { Name = "Jumbo", Amount = 45 });
             listSource.Add(new TestStore() { Name = "Plus", Amount = 34 });
 

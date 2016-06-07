@@ -41,6 +41,9 @@ namespace ReceiptVault
             this.Frame.Navigate(typeof(VATScreen));
         }
 
-    
+        private void button1_Click_1(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(VATScreen));
+        }
     }
 }

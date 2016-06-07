@@ -16,16 +16,28 @@
         	<LineBreak/>
         	<Run/>
         </TextBlock>
-        <ListBox x:Name="listBox1" HorizontalAlignment="Left" Height="421" Margin="202,160,0,0" VerticalAlignment="Top" Width="185" RenderTransformOrigin="0.5,0.5"/>
-        <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="202,135,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="185">
+        <ListBox x:Name="listBox1" HorizontalAlignment="Left" Height="421" Margin="202,253,0,0" VerticalAlignment="Top" Width="185" RenderTransformOrigin="0.5,0.5"/>
+        <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="202,208,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="185">
         	<Run Text="Selecteer een winkel"/>
         	<LineBreak/>
         </TextBlock>
 
-        <Charting:Chart x:Name="VATChart" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,160,72,0" Width="681" Height="421">
+        <Charting:Chart x:Name="VATChart" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,253,72,0" Width="681" Height="421">
             <Charting:LineSeries Title="Store Selection" Margin="0" IndependentValuePath="Name" DependentValuePath="Amount" IsSelectionEnabled="true"/>
         </Charting:Chart>
-        <DatePicker HorizontalAlignment="Left" Margin="434,81,0,0" VerticalAlignment="Top"/>
+
+        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="439,208,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="-0.419,0.24">
+        	<Run Text="Van"/>
+        	<LineBreak/>
+        	<Run/>
+        </TextBlock>
+        <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Margin="659,204,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
+        	<Run Text="Tot"/>
+        	<LineBreak/>
+        	<Run/>
+        </TextBlock>
+        <CalendarDatePicker HorizontalAlignment="Left" Margin="468,203,0,0" VerticalAlignment="Top"/>
+        <CalendarDatePicker HorizontalAlignment="Left" Margin="684,203,0,0" VerticalAlignment="Top"/>
 
 
 
