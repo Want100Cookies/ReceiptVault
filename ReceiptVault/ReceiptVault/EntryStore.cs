@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,9 +13,14 @@ using SQLite.Net.Platform.WinRT;
 
 namespace ReceiptVault
 {
+    /// <summary>
+    /// Singleton class.
+    /// </summary>
     public class EntryStore
     {
-        public EntryStore()
+        private static EntryStore instance;
+
+        private EntryStore()
         {
             using (var db = DbConnection)
             {
@@ -22,6 +28,18 @@ namespace ReceiptVault
                 var c = db.CreateTable<Entry>();
                 //var info = db.GetMapping(typeof(Entry));
                 //Debug.WriteLine(info.Columns);
+            }
+        }
+
+        public static EntryStore Instance 
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new EntryStore();
+                }
+                return instance;
             }
         }
 

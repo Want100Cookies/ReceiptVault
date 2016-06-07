@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Devices.PointOfService;
@@ -17,7 +18,9 @@ using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Input;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
 
@@ -28,16 +31,21 @@ namespace ReceiptVault
      */
     class ImageScan
     {
-        private string scannedText = "";
+        private string scannedText;
         private int[,] position;
+
+        private readonly newEntryScreen form;
 
         /// <summary>
         /// Note: Andere constructor dan in klasse diagram.
         /// </summary>
         /// <param name="position">A two dementional array with the x- and y coordinates of the top left corner and the bottom right corner.</param>
         /// <param name="file"></param>
-        public ImageScan(int[,] position, StorageFile file)
+        public ImageScan(int[,] position, StorageFile file, newEntryScreen form)
         {
+            scannedText = "";
+            this.form = form;
+
             this.position = position;
             //Debug.WriteLine("position size: " + position.Length);
             //engine = new OcrEngine()
@@ -65,24 +73,20 @@ namespace ReceiptVault
             var ocrEngine = OcrEngine.TryCreateFromLanguage(new Windows.Globalization.Language("en"));
 
             //note: testen van ocr, please delete.
-            // var file = await StorageFolder.GetFileAsync(Package.Current.InstalledLocation.Path + @"\Assets\testBonnetjePleaseDelete.bmp");
+            //var f = await Package.Current.InstalledLocation.GetFileAsync(@"Assets\testBonnetje.bmp");
 
             //hier de file gaan croppen.
-            //StorageFile croppedImage = file;
-            //int difference = position[1, 0] - position[0, 0];
-            //await CreateThumbnaiImage(file, 10, null);
             double scale = 1;
             
             int diffWidth = Math.Abs(position[1, 0] - position[0, 0]);
             int diffHeight = Math.Abs(position[1, 1] - position[0, 1]);
             Size corpSize = new Size(diffWidth, diffHeight);
 
-
             // Convert start point and size to integer. 
             uint startPointX = (uint)Math.Floor(position[0, 0] * scale);
             uint startPointY = (uint)Math.Floor(position[0, 1] * scale);
-            uint height = (uint)Math.Floor(corpSize.Height * scale);
-            uint width = (uint)Math.Floor(corpSize.Width * scale);
+            uint height = (uint)Math.Floor(Math.Abs(corpSize.Height * scale));
+            uint width = (uint)Math.Floor(Math.Abs(corpSize.Width * scale));
 
             StorageFile croppedImage;
 
@@ -91,12 +95,12 @@ namespace ReceiptVault
                 // Create a decoder from the stream. With the decoder, we can get  
                 // the properties of the image. 
                 BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                //note: vanaf hierboven werk het niet.
+
 
                 // The scaledSize of original image. 
                 uint scaledWidth = (uint)Math.Floor(decoder.PixelWidth * scale);
                 uint scaledHeight = (uint)Math.Floor(decoder.PixelHeight * scale);
-
-
 
                 // Refine the start point and the size.  
                 if (startPointX + width > scaledWidth)
@@ -110,7 +114,6 @@ namespace ReceiptVault
                     startPointY = scaledHeight - height;
                 }
 
-
                 // Create cropping BitmapTransform and define the bounds. 
                 BitmapTransform transform = new BitmapTransform();
                 BitmapBounds bounds = new BitmapBounds();
@@ -123,15 +126,26 @@ namespace ReceiptVault
                 transform.ScaledWidth = scaledWidth;
                 transform.ScaledHeight = scaledHeight;
 
-                // Get the cropped pixels within the bounds of transform. 
-
-                PixelDataProvider pix = await decoder.GetPixelDataAsync(
-                    BitmapPixelFormat.Bgra8,
-                    BitmapAlphaMode.Straight,
-                    transform,
-                    ExifOrientationMode.IgnoreExifOrientation,
-                    ColorManagementMode.ColorManageToSRgb);
-                byte[] pixels = pix.DetachPixelData();
+                byte[] receipt;
+                try
+                {
+                    // Get the cropped pixels within the bounds of transform. 
+                    PixelDataProvider pix = await decoder.GetPixelDataAsync(
+                        BitmapPixelFormat.Bgra8,
+                        BitmapAlphaMode.Straight,
+                        transform,
+                        ExifOrientationMode.IgnoreExifOrientation,
+                        ColorManagementMode.ColorManageToSRgb);
+                    receipt = pix.DetachPixelData();
+                    form.receipt = receipt;
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                    var dialog = new MessageDialog("Er is geen tekst herkent, zorg dat het bonnetje duidelijk op de foto staat.");
+                    await dialog.ShowAsync();
+                    return;
+                }
 
                 //foreach (byte t in pixels)
                 //{
@@ -141,7 +155,7 @@ namespace ReceiptVault
                 // Stream the bytes into a WriteableBitmap 
                 WriteableBitmap cropBmp = new WriteableBitmap((int)width, (int)height);
                 Stream pixStream = cropBmp.PixelBuffer.AsStream();
-                pixStream.Write(pixels, 0, (int)(width * height * 4));
+                pixStream.Write(receipt, 0, (int)(width * height * 4));
                 
 
                 croppedImage = await WriteableBitmapToStorageFile(cropBmp);
@@ -161,14 +175,20 @@ namespace ReceiptVault
                 // Extract text from image.
                 OcrResult result = await ocrEngine.RecognizeAsync(bitmap);
 
+                scannedText = result.Text;
+
+                //de gescande tekst een tekstbox zetten.
+                form.total = scannedText;
+                
                 if (result.Text == "")
                 {
                     Debug.WriteLine("Er is geen tekst herkent, zorg dat het bonnetje duidelijk op de foto staat.");
+                    var dialog = new MessageDialog("Er is geen tekst herkent, zorg dat het bonnetje duidelijk op de foto staat.");
+                    await dialog.ShowAsync();
                 }
                 else
                 {
                     // Return recognized text.
-                    scannedText = result.Text;
                     Debug.WriteLine(result.Text);
                 }
             } 
