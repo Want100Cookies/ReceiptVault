@@ -59,6 +59,8 @@ namespace ReceiptVault
             //note: dragStartPos = dragFinishPos = new int[2]; is nooit een goed idee geweest.
             dragStartPos = new int[2];
             dragFinishPos = new int[2];
+
+            picker.Date = DateTime.Now;
         }
 
         /// <summary>
@@ -210,14 +212,29 @@ namespace ReceiptVault
 
         private void buttonAccept_Click(object sender, RoutedEventArgs e)
         {
-            entry = new EntryStore.Entry();
-            entry.Date = DateTime.Now;
-            entry.Receipt = receipt;
-            entry.StoreName = textBoxShopName.Text;
-            entry.VATpercentage = Int32.Parse(textBoxVAT.Text);
-            
+           // DateTime dt = Convert.ToDateTime(picker.Date);
+            Debug.WriteLine(picker.Date.GetType());
+            DateTimeOffset date = (DateTimeOffset) picker.Date;
+            DateTime dt = date.DateTime;
 
+            Debug.WriteLine(dt.GetType());
 
+           // Executing: insert into "Entry"("StoreName", "Total", "VATpercentage", "Date", "Receipt") values(?,?,?,?,?)
+
+            entry = new EntryStore.Entry
+            {
+                StoreName = textBoxShopName.Text,
+                Total = double.Parse(textBoxTotal.Text),
+                VATpercentage = Int32.Parse(textBoxVAT.Text),
+                Date = dt,
+                Receipt = receipt
+    };
+            Debug.WriteLine(entry.StoreName);
+            EntryStore.Instance.SaveEntry(entry);
+            foreach (EntryStore.Entry enry in EntryStore.Instance.RetrieveEntry())
+            {
+                Debug.WriteLine(enry.Id);
+            }
         }
 
         private void textBlockHome_Tapped(object sender, TappedRoutedEventArgs e)

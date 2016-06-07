@@ -1,0 +1,3 @@
+zet hetbestandje in deze map:
+C:\Users\Jenno Vink\AppData\Local\Packages\8bfdc453-9181-453b-88dc-e67d6b260599_q56bhhb6kqh2c\LocalState
+kan zijn dat deze niet bestaat, je mag ook er een andere naam dan Jenno Vink neer zetten, eigen keuze.
