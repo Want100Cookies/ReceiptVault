@@ -181,12 +181,6 @@ namespace ReceiptVault
             //note: deze is best pijnlijk...
             ImageScan scan = new ImageScan(new int[2,2] { {dragStartPos[0], dragStartPos[1] }, {dragFinishPos[0], dragFinishPos[1]} }, photo, this);
 
-
-        //    while (scan.getScannedText().Equals("waiting"))
-            {
-                
-            }
-
             //note: dit gebeurt niet, denk dat de methode te vroeg wordt aangeroepen...
             textBoxTotal.Text = scan.getScannedText();
 
@@ -228,7 +222,8 @@ namespace ReceiptVault
                 VATpercentage = Int32.Parse(textBoxVAT.Text),
                 Date = dt,
                 Receipt = receipt
-    };
+            };
+
             Debug.WriteLine(entry.StoreName);
             EntryStore.Instance.SaveEntry(entry);
             foreach (EntryStore.Entry enry in EntryStore.Instance.RetrieveEntry())
