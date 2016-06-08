@@ -31,7 +31,6 @@
         <Button x:Name="buttonAccept" Content="Accepteren" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="530,377,0,0" Height="32" Width="100" Click="buttonAccept_Click"/>
         <RelativePanel HorizontalAlignment="Left" Height="1088" VerticalAlignment="Top" Width="268">
             <TextBlock x:Name="textBlockHome" TextWrapping="Wrap" Text="Home" Tapped="textBlockHome_Tapped" FontSize="22" FontWeight="Bold" Margin="14,50,-242,-102" RenderTransformOrigin="0.505,0.507" />
-            <CalendarDatePicker HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="127"/>
         </RelativePanel>
         <Image x:Name="image" HorizontalAlignment="Left" Height="100" Margin="331,163,0,0" VerticalAlignment="Top" Width="100"/>
         <CalendarDatePicker Name="picker" HorizontalAlignment="Left" Height="39" Margin="485,296,0,0" VerticalAlignment="Top" Width="145"/>

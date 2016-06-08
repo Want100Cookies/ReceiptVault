@@ -66,6 +66,11 @@ namespace ReceiptVault
             }
         }
 
+        /// <summary>
+        /// Get all entries from database, except when <param name="Id"></param> is null.
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
         public Entry RetrieveEntry(int Id)
         {
             using (var db = DbConnection)
@@ -104,6 +109,16 @@ namespace ReceiptVault
                 db.TraceListener = new DebugTraceListener();
 
                 return db.Table<Entry>().Where(s => s.StoreName == storeName).ToArray();
+            }
+        }
+
+        public String[] getAllStoreNames()
+        {
+            using (var db = DbConnection)
+            {
+                db.TraceListener = new DebugTraceListener();
+
+                return db.Table<Entry>().Select(s => s.StoreName).Distinct().ToArray();
             }
         }
 
