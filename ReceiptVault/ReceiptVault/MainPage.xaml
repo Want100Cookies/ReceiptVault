@@ -5,14 +5,28 @@
     xmlns:local="using:ReceiptVault"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:WinRTXamlToolkit.Controls"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button x:Name="button" Content="testImageScan" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="168,70,0,0" Height="36" Width="335" Click="button_Click"/>
-        <Button x:Name="buttonNewReceipt" Content="Nieuwe bon" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,70,0,0" Height="36" Width="100" Click="buttonNewReceipt_Click"/>
-        <Button x:Name="button1" Content="BTW&#xD;&#xA;" HorizontalAlignment="Left" Margin="10,179,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.363,0.15" Click="button1_Click_1"/>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10,0,0,-53">
+        <RelativePanel HorizontalAlignment="Left" Height="1123" VerticalAlignment="Top" Width="142">
+            <RelativePanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFDEF3FF" Offset="0.994"/>
+                    <GradientStop Color="White"/>
+                </LinearGradientBrush>
+            </RelativePanel.Background>
+            <TextBlock x:Name="textBlockHome" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Home" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Tapped="homeClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited" Margin="10,10,-10,-10.333"/>
+            <TextBlock x:Name="textBlockNieuweBon" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Nieuwe bon" VerticalAlignment="Top" Margin="10,42,-43.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="newRecieptClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
+            <TextBlock x:Name="textBlockUitgaven" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Uitgaven" VerticalAlignment="Top" Margin="10,74,-10.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="spendingsClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
+            <TextBlock x:Name="textBlockBTW" HorizontalAlignment="Left" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top" Margin="10,106,-10.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="VATClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
+        </RelativePanel>
 
-
+        <ScrollViewer Margin="142,0,0,0">
+            <controls:WrapPanel Name="panelReceipts" Margin="142,10,10,10" Width="Auto" HorizontalAlignment="Stretch">
+                <TextBlock Text="Here is the news that should wrap around." TextWrapping="Wrap"/>
+            </controls:WrapPanel>
+        </ScrollViewer>
     </Grid>
 </Page>
     
