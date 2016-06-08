@@ -10,7 +10,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Button x:Name="button" Content="testImageScan" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="168,70,0,0" Height="36" Width="335" Click="button_Click"/>
         <Button x:Name="buttonNewReceipt" Content="Nieuwe bon" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,70,0,0" Height="36" Width="100" Click="buttonNewReceipt_Click"/>
-        <Button x:Name="button1" Content="Button" HorizontalAlignment="Left" Margin="10,179,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.363,0.15" Click="button1_Click_1"/>
+        <Button x:Name="button1" Content="BTW&#xD;&#xA;" HorizontalAlignment="Left" Margin="10,179,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.363,0.15" Click="button1_Click_1"/>
 
 
     </Grid>

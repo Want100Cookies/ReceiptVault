@@ -43,9 +43,9 @@ namespace ReceiptVault
             (VATChart.Series[0] as LineSeries).ItemsSource = listSource;
         }
 
-        private void VATScreen1_Loaded(object sender, RoutedEventArgs e)
+        private void homeText_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            
+            this.Frame.Navigate(typeof(MainPage));
         }
     }
 }

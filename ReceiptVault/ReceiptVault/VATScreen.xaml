@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
-    mc:Ignorable="d" Loaded="VATScreen1_Loaded" Width="1187">
+    mc:Ignorable="d"  Width="1187">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,0.2,0">
         <MediaElement x:Name="mediaPreivew"
@@ -38,6 +38,7 @@
         </TextBlock>
         <CalendarDatePicker HorizontalAlignment="Left" Margin="468,203,0,0" VerticalAlignment="Top"/>
         <CalendarDatePicker HorizontalAlignment="Left" Margin="684,203,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="homeText" HorizontalAlignment="Left" Margin="10,60,0,0" TextWrapping="Wrap" Text="HOME" VerticalAlignment="Top" FontWeight="Bold" FontSize="24" PointerPressed="homeText_PointerPressed"/>
 
 
 
