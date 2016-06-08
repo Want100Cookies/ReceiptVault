@@ -37,8 +37,7 @@ namespace ReceiptVault
                 Debug.WriteLine("Entry found! " + entry.Id);
             }
 
-            Debug.WriteLine("MainPage() aangeroepen");
-            //  entries = EntryStore.Instance.RetrieveEntry();
+            updateEntries();
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -56,11 +55,17 @@ namespace ReceiptVault
         /// </summary>
         public void updateEntries()
         {
-            //entries
-            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
+            if (!isChanged())
             {
-                entries.Add(entry);
-                Debug.WriteLine("Entry found! " + entry.Id);
+                //eerst entries op null zetten, wordt de garbage collector vrolijk van.
+                entries = null;
+                entries = new List<EntryStore.Entry>();
+                //entries
+                foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
+                {
+                    entries.Add(entry);
+                    Debug.WriteLine("Entry found! " + entry.Id);
+                }
             }
         }
 

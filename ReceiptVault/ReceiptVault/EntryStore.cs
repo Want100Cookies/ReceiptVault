@@ -112,6 +112,10 @@ namespace ReceiptVault
             }
         }
 
+        /// <summary>
+        /// Receive the names of the stores.
+        /// </summary>
+        /// <returns></returns>
         public String[] getAllStoreNames()
         {
             using (var db = DbConnection)
