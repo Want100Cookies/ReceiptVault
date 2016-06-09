@@ -33,14 +33,7 @@ namespace ReceiptVault
 
         public static EntryStore Instance 
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new EntryStore();
-                }
-                return instance;
-            }
+            get { return instance ?? (instance = new EntryStore()); }
         }
 
         private static SQLiteConnection DbConnection => new SQLiteConnection(

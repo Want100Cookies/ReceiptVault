@@ -13,7 +13,6 @@
         <Canvas Margin="429,10,10,150" x:Name="canvas">
             <Image x:Name="imgNewReceipt" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="200" PointerPressed="dragStart" PointerReleased="dragFinish" PointerMoved="dragMove"/>
             <Rectangle x:Name="rect" StrokeThickness="3" Stroke="#ff0000"></Rectangle>
-            <Image x:Name="imageCropped" Height="151" Width="145" Canvas.Left="-199" Canvas.Top="49" x:FieldModifier="public"/>
         </Canvas>
 
         <Button x:Name="button" Content="Maak foto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="114,289,0,0" Click="button_Click"/>

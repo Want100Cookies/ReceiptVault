@@ -137,8 +137,8 @@ namespace ReceiptVault
                         ExifOrientationMode.IgnoreExifOrientation,
                         ColorManagementMode.ColorManageToSRgb);
                     receipt = pix.DetachPixelData();
-                    form.receipt = receipt;
-                }
+                //    form.receipt = receipt;
+                         }
                 catch (Exception e)
                 {
                     Debug.WriteLine(e);

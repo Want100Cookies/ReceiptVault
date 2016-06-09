@@ -41,7 +41,7 @@ namespace ReceiptVault
         private Boolean dragging;
         private StorageFile photo;
 
-        //i'll go to h... for this.
+        //i'll go to ... for this.
         public byte[] receipt;
 
         //field to edit the value of textBoxTotal.
@@ -109,11 +109,13 @@ namespace ReceiptVault
             //image saven:
             //Debug.WriteLine("image proberen te saven in " + ApplicationData.Current.LocalFolder);
             //note: dit gaan linken met iets in de db.
-            await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
-            this.photo = photo;
-            Debug.WriteLine("image saved");
+            //    await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
+            //   this.photo = photo;
+            //  Debug.WriteLine("image saved");
+            
+            receipt = await ReadFile(photo);
 
-            IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
+              IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
             BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
             SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
@@ -123,8 +125,32 @@ namespace ReceiptVault
 
             SoftwareBitmapSource bitmapSource = new SoftwareBitmapSource();
             await bitmapSource.SetBitmapAsync(softwareBitmapBGR8);
-            imgNewReceipt.Source = bitmapSource;
+           // imgNewReceipt.Source = bitmapSource;
+
+            imgNewReceipt.Source = await ImageFromBytes(receipt);
+
         }
+
+        /// <summary>
+        /// Loads the byte data from a StorageFile
+        /// </summary>
+        /// <param name="file">The file to read</param>
+        public async Task<byte[]> ReadFile(StorageFile file)
+        {
+            byte[] fileBytes = null;
+
+            using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
+            { 
+                fileBytes = new byte[stream.Size];
+                using (DataReader reader = new DataReader(stream))
+                {
+                    await reader.LoadAsync((uint)stream.Size);
+                    reader.ReadBytes(fileBytes);
+                }
+            }
+            return fileBytes;
+        }
+    
 
         private static async Task<BitmapImage> LoadImage(StorageFile file)
         {
@@ -134,7 +160,6 @@ namespace ReceiptVault
             bitmapImage.SetSource(stream);
 
             return bitmapImage;
-
         }
 
         public void dragStart(object sender, PointerRoutedEventArgs e)
@@ -211,6 +236,12 @@ namespace ReceiptVault
             DateTimeOffset date = (DateTimeOffset) picker.Date;
             DateTime dt = date.DateTime;
 
+            //note: picture encoding here.
+
+            Debug.WriteLine("--------------");
+            Debug.WriteLine("Receipt is op dit moment: " + receipt.GetType());
+            Debug.WriteLine("--------------");
+
             Debug.WriteLine(dt.GetType());
 
            // Executing: insert into "Entry"("StoreName", "Total", "VATpercentage", "Date", "Receipt") values(?,?,?,?,?)
@@ -230,6 +261,19 @@ namespace ReceiptVault
             {
                 Debug.WriteLine(enry.Id);
             }
+        }
+
+
+        public async static Task<BitmapImage> ImageFromBytes(Byte[] bytes)
+        {
+            BitmapImage image = new BitmapImage();
+            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+            {
+                await stream.WriteAsync(bytes.AsBuffer());
+                stream.Seek(0);
+                await image.SetSourceAsync(stream);
+            }
+            return image;
         }
 
         private void textBlockHome_Tapped(object sender, TappedRoutedEventArgs e)
