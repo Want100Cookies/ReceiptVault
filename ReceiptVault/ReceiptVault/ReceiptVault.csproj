@@ -110,6 +110,9 @@
       <DependentUpon>newEntryScreenScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="spendingsScreen.xaml.cs">
+      <DependentUpon>spendingsScreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VATScreen.xaml.cs">
       <DependentUpon>VATScreen.xaml</DependentUpon>
     </Compile>
@@ -141,6 +144,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="newEntryScreenScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="spendingsScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

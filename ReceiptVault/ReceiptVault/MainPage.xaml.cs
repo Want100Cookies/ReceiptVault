@@ -85,7 +85,7 @@ namespace ReceiptVault
 
                         //note: het verhaal over het opslaan van images laten we even.
                         Image img = new Image();
-                        File.WriteAllBytes("receipt.jpg", entry.Receipt);
+                        //File.WriteAllBytes("receipt.jpg", entry.Receipt);
        
 
                         panelEntry.Children.Add(img);
@@ -177,7 +177,7 @@ namespace ReceiptVault
 
         private void spendingsClicked(object sender, RoutedEventArgs e)
         {
-          //  this.Frame.Navigate(typeof(spendingScreen));
+            this.Frame.Navigate(typeof(spendingsScreen));
         }
 
         private void homeClicked(object sender, RoutedEventArgs e)
@@ -201,24 +201,24 @@ namespace ReceiptVault
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
         }
 
-        public byte[] ImageToByte(Image image)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                // Convert Image to byte[]
-                image.Save(ms, format);
-                byte[] imageBytes = ms.ToArray();
-                return imageBytes;
-            }
-        }
-        //public Image Base64ToImage(string base64String)
-        public Image ByteToImage(byte[] imageBytes)
-        {
-            // Convert byte[] to Image
-            MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
-            ms.Write(imageBytes, 0, imageBytes.Length);
-            Image image = new Bitmap(ms);
-            return image;
-        }
+        //public byte[] ImageToByte(Image image)
+        //{
+        //    using (MemoryStream ms = new MemoryStream())
+        //    {
+        //        // Convert Image to byte[]
+        //        image.Save(ms, format);
+        //        byte[] imageBytes = ms.ToArray();
+        //        return imageBytes;
+        //    }
+        //}
+        ////public Image Base64ToImage(string base64String)
+        //public Image ByteToImage(byte[] imageBytes)
+        //{
+        //    // Convert byte[] to Image
+        //    MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
+        //    ms.Write(imageBytes, 0, imageBytes.Length);
+        //    Image image = new Bitmap(ms);
+        //    return image;
+        //}
     }
 }

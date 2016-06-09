@@ -7,7 +7,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" Height="1088" Width="2256">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="8,0,-8,0">
+        <RelativePanel HorizontalAlignment="Left" Height="1123" VerticalAlignment="Top" Width="142" Margin="0,0,0,-35">
+            <RelativePanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFDEF3FF" Offset="0.994"/>
+                    <GradientStop Color="White"/>
+                </LinearGradientBrush>
+            </RelativePanel.Background>
+            <TextBlock x:Name="textBlockHome" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Home" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Tapped="homeClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited" Margin="10,10,-10,-10.333"/>
+            <TextBlock x:Name="textBlockNieuweBon" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Nieuwe bon" VerticalAlignment="Top" Margin="10,42,-43.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="newRecieptClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
+            <TextBlock x:Name="textBlockUitgaven" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Uitgaven" VerticalAlignment="Top" Margin="10,74,-10.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="spendingsClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
+            <TextBlock x:Name="textBlockBTW" HorizontalAlignment="Left" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top" Margin="10,106,-10.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="VATClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
+        </RelativePanel>
+
 
         <Rectangle Margin="0,5,0,0" Height="1" Fill="#ff0000" Visibility="Collapsed"/>
         <Canvas Margin="429,10,10,150" x:Name="canvas">
@@ -15,7 +28,7 @@
             <Rectangle x:Name="rect" StrokeThickness="3" Stroke="#ff0000"></Rectangle>
         </Canvas>
 
-        <Button x:Name="button" Content="Maak foto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="114,289,0,0" Click="button_Click"/>
+        <Button x:Name="button" Content="Maak foto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="210,377,0,0" Click="button_Click"/>
 
         <MediaElement x:Name="mediaPreivew"
               Width="320" />
@@ -28,10 +41,7 @@
         <TextBox x:Name="textBoxVAT" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="485,340,0,0" Width="145" PlaceholderText="-"/>
         <TextBlock x:Name="textBlock_Copy2" HorizontalAlignment="Left" Margin="390,352,0,0" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top"/>
         <Button x:Name="buttonAccept" Content="Accepteren" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="530,377,0,0" Height="32" Width="100" Click="buttonAccept_Click"/>
-        <RelativePanel HorizontalAlignment="Left" Height="1088" VerticalAlignment="Top" Width="268">
-            <TextBlock x:Name="textBlockHome" TextWrapping="Wrap" Text="Home" Tapped="textBlockHome_Tapped" FontSize="22" FontWeight="Bold" Margin="14,50,-242,-102" RenderTransformOrigin="0.505,0.507" />
-        </RelativePanel>
-        <Image x:Name="image" HorizontalAlignment="Left" Height="100" Margin="331,163,0,0" VerticalAlignment="Top" Width="100"/>
+     
         <CalendarDatePicker Name="picker" HorizontalAlignment="Left" Height="39" Margin="485,296,0,0" VerticalAlignment="Top" Width="145"/>
     </Grid>
 </Page>

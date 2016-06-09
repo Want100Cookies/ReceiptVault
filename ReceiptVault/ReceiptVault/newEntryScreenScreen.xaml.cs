@@ -15,6 +15,7 @@ using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Profile;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -214,19 +215,40 @@ namespace ReceiptVault
             Debug.WriteLine("Invoerveld in aangepast nu.");
         }
 
-        public void homeClicked()
+        private void newRecieptClicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(newEntryScreen));
+        }
+
+        private void VATClicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(VATScreen));
+        }
+
+        private void spendingsClicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(spendingsScreen));
+        }
+
+        private void homeClicked(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainPage));
         }
 
-        public void spendingsClicked()
+        /// <summary>
+        /// note: de volgende twee events zijn voor het veranderen van de mouse pointer wanneer er een hover plaatsvind over 1 van de 4 menu items.        
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBlockHome_OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
-
+            Window.Current.CoreWindow.PointerCursor =
+                new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Hand, 1);
         }
 
-        public void VATClicked()
+        private void TextBlockHome_OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
-
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
         }
 
         private void buttonAccept_Click(object sender, RoutedEventArgs e)
@@ -275,11 +297,5 @@ namespace ReceiptVault
             }
             return image;
         }
-
-        private void textBlockHome_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            homeClicked();
-        }
-
     }
 }

@@ -60,7 +60,7 @@ namespace ReceiptVault
         }
 
         /// <summary>
-        /// Get all entries from database, except when <param name="Id"></param> is null.
+        /// Get the entry from the database matchin with <param name="Id"></param>.
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
@@ -74,6 +74,12 @@ namespace ReceiptVault
             }
         }
 
+        /// <summary>
+        /// Get all entries between the startDate and the endDate.
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public Entry[] RetrieveEntry(DateTime startDate, DateTime endDate)
         {
             using (var db = DbConnection)
@@ -85,6 +91,10 @@ namespace ReceiptVault
             }
         }
 
+        /// <summary>
+        /// Get all entries from the database.
+        /// </summary>
+        /// <returns>Array of entries.</returns>
         public Entry[] RetrieveEntry()
         {
             using (var db = DbConnection)
@@ -95,6 +105,11 @@ namespace ReceiptVault
             }
         }
 
+        /// <summary>
+        /// note: Pascal vragen of deze %searchText% doet.
+        /// </summary>
+        /// <param name="storeName"></param>
+        /// <returns></returns>
         public Entry[] RetrieveEntry(string storeName)
         {
             using (var db = DbConnection)
