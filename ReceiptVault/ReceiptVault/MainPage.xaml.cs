@@ -4,8 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -14,6 +16,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using WinRTXamlToolkit.Controls;
 using Panel = Windows.Devices.Enumeration.Panel;
@@ -45,7 +48,7 @@ namespace ReceiptVault
         /// Updates all the entries on the screen, syncing the data of the database with the entries on the screen.
         /// NOTE: dit werkt, maar de uitlijning is minder. TODO
         /// </summary>
-        public void updateEntries()
+        public async void updateEntries()
         {
             Debug.WriteLine("isChanged() is " + isChanged());
             if (isChanged())
@@ -65,14 +68,37 @@ namespace ReceiptVault
                     //Debug.WriteLine("Entry found! " + entry.Id);
                     StackPanel panelEntry = new StackPanel();
                     //todo: image convertion here.
-                    panelEntry.Children.Add(new Image());
+                   // foreach (byte b in entry.Receipt)
+                    {
+                 //       Debug.WriteLine("byte found: " + b);
+                    }
+
+
+                    Debug.WriteLine(entry.Receipt);
+                    if (entry.Receipt != null)
+                    {
+                        Debug.WriteLine("--------------------");
+                      //  Debug.WriteLine(await ImageFromBytes(entry.Receipt));
+
+                        Debug.WriteLine(entry.Receipt.ToString());
+                        Debug.WriteLine("--------------------");
+
+                        //note: het verhaal over het opslaan van images laten we even.
+                        Image img = new Image();
+                        //File.WriteAllBytes("receipt.jpg", entry.Receipt);
+       
+
+                        panelEntry.Children.Add(img);
+                    }
+
+
 
                     //storeName:
                     TextBlock txtStore = new TextBlock();
                     txtStore.Text = entry.StoreName;
 
                     TextBlock txtAmount = new TextBlock();
-                    txtAmount.Text = entry.Total.ToString("C");
+                    txtAmount.Text = entry.Total.ToString("'€'########.00");
 
                     //finally: add to the panel.
                     panelEntry.Children.Add(txtStore);
@@ -83,8 +109,8 @@ namespace ReceiptVault
 
                     panelEntry.BorderBrush = new SolidColorBrush(Colors.Red);
 
-                    panelEntry.Width = 150;
-                    panelEntry.Height = 100;
+                    panelEntry.Width = 250;
+                    panelEntry.Height = 200;
 
                     panelEntry.Margin = new Thickness(20, 10, 0, 0);
                     
@@ -92,7 +118,7 @@ namespace ReceiptVault
                     
                 }
             }
-        }
+       }
 
         /// <summary>
         /// Is de lijst veranderd?
@@ -118,7 +144,7 @@ namespace ReceiptVault
             {
                 EntryStore.Entry entry = entriesInDB[i];
                 idsInDB[i] = entry.Id;
-        //        Debug.WriteLine("Entrystore heeft het volgende id: " + idsInDB[i]);
+                //Debug.WriteLine("Entrystore heeft het volgende id: " + idsInDB[i]);
             }
 
             //array idsOnScreen vullen met alle id's van de receipts op het scherm.
@@ -152,7 +178,7 @@ namespace ReceiptVault
 
         private void spendingsClicked(object sender, RoutedEventArgs e)
         {
-          //  this.Frame.Navigate(typeof(spendingScreen));
+            this.Frame.Navigate(typeof(spendingsScreen));
         }
 
         private void homeClicked(object sender, RoutedEventArgs e)
@@ -175,5 +201,25 @@ namespace ReceiptVault
         {
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
         }
+
+        //public byte[] ImageToByte(Image image)
+        //{
+        //    using (MemoryStream ms = new MemoryStream())
+        //    {
+        //        // Convert Image to byte[]
+        //        image.Save(ms, format);
+        //        byte[] imageBytes = ms.ToArray();
+        //        return imageBytes;
+        //    }
+        //}
+        ////public Image Base64ToImage(string base64String)
+        //public Image ByteToImage(byte[] imageBytes)
+        //{
+        //    // Convert byte[] to Image
+        //    MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
+        //    ms.Write(imageBytes, 0, imageBytes.Length);
+        //    Image image = new Bitmap(ms);
+        //    return image;
+        //}
     }
 }

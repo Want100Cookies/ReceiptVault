@@ -15,6 +15,7 @@ using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Profile;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -41,7 +42,7 @@ namespace ReceiptVault
         private Boolean dragging;
         private StorageFile photo;
 
-        //i'll go to h... for this.
+        //i'll go to ... for this.
         public byte[] receipt;
 
         //field to edit the value of textBoxTotal.
@@ -109,11 +110,13 @@ namespace ReceiptVault
             //image saven:
             //Debug.WriteLine("image proberen te saven in " + ApplicationData.Current.LocalFolder);
             //note: dit gaan linken met iets in de db.
-            await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
-            this.photo = photo;
-            Debug.WriteLine("image saved");
+            //    await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
+            //   this.photo = photo;
+            //  Debug.WriteLine("image saved");
+            
+            receipt = await ReadFile(photo);
 
-            IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
+              IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
             BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
             SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
@@ -123,8 +126,32 @@ namespace ReceiptVault
 
             SoftwareBitmapSource bitmapSource = new SoftwareBitmapSource();
             await bitmapSource.SetBitmapAsync(softwareBitmapBGR8);
-            imgNewReceipt.Source = bitmapSource;
+           // imgNewReceipt.Source = bitmapSource;
+
+            imgNewReceipt.Source = await ImageFromBytes(receipt);
+
         }
+
+        /// <summary>
+        /// Loads the byte data from a StorageFile
+        /// </summary>
+        /// <param name="file">The file to read</param>
+        public async Task<byte[]> ReadFile(StorageFile file)
+        {
+            byte[] fileBytes = null;
+
+            using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
+            { 
+                fileBytes = new byte[stream.Size];
+                using (DataReader reader = new DataReader(stream))
+                {
+                    await reader.LoadAsync((uint)stream.Size);
+                    reader.ReadBytes(fileBytes);
+                }
+            }
+            return fileBytes;
+        }
+    
 
         private static async Task<BitmapImage> LoadImage(StorageFile file)
         {
@@ -134,7 +161,6 @@ namespace ReceiptVault
             bitmapImage.SetSource(stream);
 
             return bitmapImage;
-
         }
 
         public void dragStart(object sender, PointerRoutedEventArgs e)
@@ -189,19 +215,40 @@ namespace ReceiptVault
             Debug.WriteLine("Invoerveld in aangepast nu.");
         }
 
-        public void homeClicked()
+        private void newRecieptClicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(newEntryScreen));
+        }
+
+        private void VATClicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(VATScreen));
+        }
+
+        private void spendingsClicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(spendingsScreen));
+        }
+
+        private void homeClicked(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainPage));
         }
 
-        public void spendingsClicked()
+        /// <summary>
+        /// note: de volgende twee events zijn voor het veranderen van de mouse pointer wanneer er een hover plaatsvind over 1 van de 4 menu items.        
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBlockHome_OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
-
+            Window.Current.CoreWindow.PointerCursor =
+                new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Hand, 1);
         }
 
-        public void VATClicked()
+        private void TextBlockHome_OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
-
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
         }
 
         private void buttonAccept_Click(object sender, RoutedEventArgs e)
@@ -210,6 +257,12 @@ namespace ReceiptVault
             Debug.WriteLine(picker.Date.GetType());
             DateTimeOffset date = (DateTimeOffset) picker.Date;
             DateTime dt = date.DateTime;
+
+            //note: picture encoding here.
+
+            Debug.WriteLine("--------------");
+            Debug.WriteLine("Receipt is op dit moment: " + receipt.GetType());
+            Debug.WriteLine("--------------");
 
             Debug.WriteLine(dt.GetType());
 
@@ -232,10 +285,17 @@ namespace ReceiptVault
             }
         }
 
-        private void textBlockHome_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            homeClicked();
-        }
 
+        public async static Task<BitmapImage> ImageFromBytes(Byte[] bytes)
+        {
+            BitmapImage image = new BitmapImage();
+            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+            {
+                await stream.WriteAsync(bytes.AsBuffer());
+                stream.Seek(0);
+                await image.SetSourceAsync(stream);
+            }
+            return image;
+        }
     }
 }

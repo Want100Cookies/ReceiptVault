@@ -1,15 +1,15 @@
 ﻿<Page
-    x:Class="ReceiptVault.MainPage"
+    x:Class="ReceiptVault.spendingsScreen"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:ReceiptVault"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:WinRTXamlToolkit.Controls"
+    xmlns:system="using:System"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10,0,0,-53">
-        <RelativePanel HorizontalAlignment="Left" Height="1123" VerticalAlignment="Top" Width="142" Margin="-5,0,0,0">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <RelativePanel HorizontalAlignment="Left" Height="1080" VerticalAlignment="Top" Width="142">
             <RelativePanel.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFDEF3FF" Offset="0.994"/>
@@ -21,13 +21,16 @@
             <TextBlock x:Name="textBlockUitgaven" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Uitgaven" VerticalAlignment="Top" Margin="10,74,-10.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="spendingsClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
             <TextBlock x:Name="textBlockBTW" HorizontalAlignment="Left" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top" Margin="10,106,-10.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="VATClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
         </RelativePanel>
-
-        <ScrollViewer Margin="142,0,0,0">
-            <controls:WrapPanel Name="panelReceipts" Margin="142,10,10,10" Width="Auto" HorizontalAlignment="Stretch">
-                <TextBlock Text="Here is the news that should wrap around." TextWrapping="Wrap"/>
-            </controls:WrapPanel>
-        </ScrollViewer>
+        <TextBox x:Name="textBoxSearch" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="229,87,0,0" Width="253" PlaceholderText="Voer hier een winkelnaam in" TextChanged="TextBoxSearch_OnTextChanged"/>
+        <ListBox x:Name="listBoxStores" HorizontalAlignment="Left" Height="790" VerticalAlignment="Top" Width="253" Margin="229,119,0,0"/>
+        <ComboBox x:Name="comboBoxWeek" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="631,727,0,0" Height="38" PlaceholderText="Week"/>
+        <ComboBox x:Name="comboBoxMonth" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="833,727,0,0" Height="38" PlaceholderText="Maand"/>
+        <ComboBox x:Name="comboBoxYear" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="1036,727,0,0" Height="38" PlaceholderText="Jaar"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="552,731,0,0" TextWrapping="Wrap" Text="Filteren op:" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="631,707,0,0" TextWrapping="Wrap" Text="Week" VerticalAlignment="Top" RenderTransformOrigin="0.279,0.483"/>
+        <TextBlock x:Name="textBlock1_Copy" HorizontalAlignment="Left" Margin="833,707,0,0" TextWrapping="Wrap" Text="Maand" VerticalAlignment="Top" RenderTransformOrigin="0.279,0.483"/>
+        <TextBlock x:Name="textBlock1_Copy1" HorizontalAlignment="Left" Margin="1036,707,0,0" TextWrapping="Wrap" Text="Jaar" VerticalAlignment="Top" RenderTransformOrigin="0.279,0.483"/>
+        
     </Grid>
+
 </Page>
-    
-    
