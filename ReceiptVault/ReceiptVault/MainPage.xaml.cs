@@ -89,6 +89,7 @@ namespace ReceiptVault
                     panelEntry.Margin = new Thickness(20, 10, 0, 0);
                     
                     panelReceipts.Children.Add(panelEntry);
+                    
                 }
             }
         }

@@ -12,12 +12,12 @@ using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 namespace ReceiptVault
 {
 
-    public class TestStore
-    {
-        public String Name { get; set; }
-        public int Amount { get; set; }
-       
-    }
+    //public class TestStore
+    //{
+    //    public String Name { get; set; }
+    //    public int Amount { get; set; }
+
+    //}
 
     public sealed partial class VATScreen : Page
     {
@@ -35,13 +35,12 @@ namespace ReceiptVault
 
         private void LoadChartContents()
         {
-            List<TestStore> listSource = new List<TestStore>();
-            listSource.Add(new TestStore() { Name = "Abert Hein", Amount = 0 });
-            listSource.Add(new TestStore() { Name = "Jumbo", Amount = 45 });
-            listSource.Add(new TestStore() { Name = "Plus", Amount = 34 });
-
+            List <EntryStore.Entry> listSource = new List<EntryStore.Entry>();
+            listSource.Add(new EntryStore.Entry() { VATpercentage = 21, Total = 20.23 });
+                
             (VATChart.Series[0] as LineSeries).ItemsSource = listSource;
         }
+
 
         private void homeText_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {

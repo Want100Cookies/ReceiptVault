@@ -23,7 +23,7 @@
         </TextBlock>
 
         <Charting:Chart x:Name="VATChart" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,253,72,0" Width="681" Height="421">
-            <Charting:LineSeries Title="Store Selection" Margin="0" IndependentValuePath="Name" DependentValuePath="Amount" IsSelectionEnabled="true"/>
+            <Charting:LineSeries x:Name="VATValues" Title="Store Selection" Margin="0" IndependentValuePath="Total" DependentValuePath="VATpercentage" IsSelectionEnabled="true"/>
         </Charting:Chart>
 
         <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="439,208,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="-0.419,0.24">
