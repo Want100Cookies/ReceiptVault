@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -73,7 +75,61 @@ namespace ReceiptVault
         /// </summary>
         private void filterDate()
         {
-           // EntryStore.Instance.RetrieveEntry()
+            if (comboBoxYear.SelectedIndex == 0)
+            {
+                comboBoxYear.SelectedIndex = comboBoxYear.Items.Count - 1;
+            }
+
+            //todo: fix alle nullreferenceExceptions...
+           // Debug.WriteLine(comboBoxYear.select);
+
+
+            DateTime beginDateTime;
+            DateTime endDateTime;
+            
+            Debug.WriteLine("De selectedIndex is " + comboBoxWeek.SelectedIndex);
+
+            //de gebruiker wil alleen per jaar...
+            if (comboBoxWeek.SelectedIndex == 0 && comboBoxMonth.SelectedIndex == 0)
+            {
+                beginDateTime = new DateTime((int) comboBoxYear.SelectedValue, 1, 1);
+                endDateTime = new DateTime((int) comboBoxYear.SelectedValue, 12, 31);
+                Debug.WriteLine("Er gaat straks een getEntry methode aangeroepen worden.");
+                Debug.WriteLine("De beginDate is: " + beginDateTime.ToString());
+                Debug.WriteLine("De eindDate is: " + beginDateTime.ToString());
+            } else if (comboBoxWeek.SelectedIndex != 0)
+            {
+                Debug.WriteLine(comboBoxYear.SelectedIndex);
+                //beginDateTime = FirstDateOfWeek((int) comboBoxYear.SelectedValue,
+                //    (int) comboBoxWeek.SelectedValue, CalendarWeekRule.FirstDay);
+                //endDateTime = beginDateTime.AddDays(6);
+                //Debug.WriteLine("Er gaat straks een getEntry methode aangeroepen worden.");
+                //Debug.WriteLine("De beginDate is: " + beginDateTime.ToString());
+                //Debug.WriteLine("De eindDate is: " + beginDateTime.ToString());
+            }
+        }
+
+        static DateTime FirstDateOfWeek(int year, int weekNum, CalendarWeekRule rule)
+        {
+            Debug.Assert(weekNum >= 1);
+
+            DateTime jan1 = new DateTime(year, 1, 1);
+
+            int daysOffset = DayOfWeek.Monday - jan1.DayOfWeek;
+            DateTime firstMonday = jan1.AddDays(daysOffset);
+            Debug.Assert(firstMonday.DayOfWeek == DayOfWeek.Monday);
+
+            var cal = CultureInfo.CurrentCulture.Calendar;
+            int firstWeek = cal.GetWeekOfYear(firstMonday, rule, DayOfWeek.Monday);
+
+            if (firstWeek <= 1)
+            {
+                weekNum -= 1;
+            }
+
+            DateTime result = firstMonday.AddDays(weekNum * 7);
+
+            return result;
         }
 
         /// <summary>
@@ -81,22 +137,41 @@ namespace ReceiptVault
         /// </summary>
         private void initDropdowns()
         {
+            comboBoxMonth.Items.Add("Maand");
+            comboBoxMonth.SelectedIndex = 0;
+
+
+            comboBoxWeek.Items.Add("Week");
+            comboBoxWeek.SelectedIndex = 0;
+
+            comboBoxYear.Items.Add("Jaar");
+            comboBoxYear.SelectedIndex = 0;
             //months/weeks:
             for (int i = 1; i <= 12; i++)
             {
-                comboBoxMonth.Items.Add(i);
-                comboBoxWeek.Items.Add(i);
+                CheckBox c = new CheckBox();
+                c.Content = i.ToString();
+                comboBoxMonth.Items.Add(c);
+
+                //for some reason wil hij dat er een nieuwe aangemaakt moet worden.
+                c = new CheckBox();
+                c.Content = i.ToString();
+                comboBoxWeek.Items.Add(c);
             }
 
             //weeks, starting from 12 for saving the CPU cycles.
             for (int i = 13; i <= 52; i++)
             {
-                comboBoxWeek.Items.Add(i);
+                CheckBox c = new CheckBox();
+                c.Content = i.ToString();
+                comboBoxWeek.Items.Add(c);
             }
 
             for (int i = 1950; i <= DateTime.Now.Year; i++)
             {
-                comboBoxYear.Items.Add(i);
+                CheckBox c = new CheckBox();
+                c.Content = i.ToString();
+                comboBoxYear.Items.Add(c);
             }
         }
 
@@ -139,6 +214,21 @@ namespace ReceiptVault
         private void TextBoxSearch_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             filterStoreName();
+        }
+
+        /// <summary>
+        /// Button die alle input velden reset.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonReset_Click(object sender, RoutedEventArgs e)
+        {
+            comboBoxMonth.SelectedIndex = comboBoxWeek.SelectedIndex = comboBoxYear.SelectedIndex = 0;
+        }
+
+        private void ComboBoxWeek_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            filterDate();
         }
     }
 }

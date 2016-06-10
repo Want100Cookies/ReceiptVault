@@ -23,14 +23,16 @@
         </RelativePanel>
         <TextBox x:Name="textBoxSearch" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="229,87,0,0" Width="253" PlaceholderText="Voer hier een winkelnaam in" TextChanged="TextBoxSearch_OnTextChanged"/>
         <ListBox x:Name="listBoxStores" HorizontalAlignment="Left" Height="790" VerticalAlignment="Top" Width="253" Margin="229,119,0,0"/>
-        <ComboBox x:Name="comboBoxWeek" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="631,727,0,0" Height="38" PlaceholderText="Week"/>
-        <ComboBox x:Name="comboBoxMonth" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="833,727,0,0" Height="38" PlaceholderText="Maand"/>
-        <ComboBox x:Name="comboBoxYear" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="1036,727,0,0" Height="38" PlaceholderText="Jaar"/>
+        <ComboBox x:Name="comboBoxWeek" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="631,727,0,0" Height="38" SelectionChanged="ComboBoxWeek_OnSelectionChanged"/>
+        <ComboBox x:Name="comboBoxMonth" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="833,731,0,0" Height="38" SelectionChanged="ComboBoxWeek_OnSelectionChanged"/>
+        <ComboBox x:Name="comboBoxYear" HorizontalAlignment="Left" Width="188" Margin="1036,732,0,0" Height="37"/>
+
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="552,731,0,0" TextWrapping="Wrap" Text="Filteren op:" VerticalAlignment="Top"/>
         <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="631,707,0,0" TextWrapping="Wrap" Text="Week" VerticalAlignment="Top" RenderTransformOrigin="0.279,0.483"/>
         <TextBlock x:Name="textBlock1_Copy" HorizontalAlignment="Left" Margin="833,707,0,0" TextWrapping="Wrap" Text="Maand" VerticalAlignment="Top" RenderTransformOrigin="0.279,0.483"/>
         <TextBlock x:Name="textBlock1_Copy1" HorizontalAlignment="Left" Margin="1036,707,0,0" TextWrapping="Wrap" Text="Jaar" VerticalAlignment="Top" RenderTransformOrigin="0.279,0.483"/>
-        
+        <Button x:Name="buttonReset" Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="527,87,0,0" Width="169" Height="32" Click="buttonReset_Click"/>
+
     </Grid>
 
 </Page>
