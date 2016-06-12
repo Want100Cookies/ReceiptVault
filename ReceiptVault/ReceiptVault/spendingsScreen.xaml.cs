@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,10 +38,20 @@ namespace ReceiptVault
         }
 
         /// <summary>
-        /// Data uit de database rippen.
+        /// Data uit de database rippen aan de hand van begin- en endDates.
         /// </summary>
-        private void populateGraph()
+        private void populateGraph(DateTime beginDateTime, DateTime endDateTime)
         {
+            List<EntryStore.Entry> chartData = new List<EntryStore.Entry>();
+
+            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime))
+            {
+                //this looks very weird. Deze regel haalt de tijd weg bij de dateTime, op deze manier staat worden de uitgaven per dag op geteld (en niet per dag + tijdstip).
+                entry.Date = entry.Date.Date;
+                chartData.Add(entry);
+            }
+
+            (spendingChart.Series[0] as ColumnSeries).ItemsSource = chartData;
             
         }
 
@@ -89,10 +100,6 @@ namespace ReceiptVault
                     comboBoxYear.SelectedIndex = comboBoxYear.Items.Count - 1;
                 }
 
-                //todo: fix alle nullreferenceExceptions...
-         //       Debug.WriteLine(comboBoxYear.SelectedValue);
-
-
                 DateTime beginDateTime = new DateTime(Int32.Parse(comboBoxYear.Items[1].ToString()), 1, 1);
                 DateTime endDateTime = DateTime.Now;
 
@@ -109,6 +116,8 @@ namespace ReceiptVault
                 }
                 else if (comboBoxWeek.SelectedIndex != 0)
                 {
+                    //de gebruiker wil alleen per week.
+                    //note: dit moet nog getest worden.
                     Debug.WriteLine(comboBoxYear.SelectedIndex);
                     beginDateTime = FirstDateOfWeek((int) comboBoxYear.SelectedValue,
                         (int) comboBoxWeek.SelectedValue, CalendarWeekRule.FirstDay);
@@ -116,6 +125,15 @@ namespace ReceiptVault
                     Debug.WriteLine("Er gaat straks een getEntry methode aangeroepen worden.");
                     Debug.WriteLine("De beginDate is: " + beginDateTime);
                     Debug.WriteLine("De eindDate is: " + endDateTime);
+                }
+                else if (comboBoxMonth.SelectedIndex != 0)
+                {
+                    beginDateTime = new DateTime((int)comboBoxYear.SelectedValue, (int) comboBoxMonth.SelectedValue, 1, 0, 0, 0);
+                    endDateTime = new DateTime((int) comboBoxYear.SelectedValue, 
+                        (int) comboBoxMonth.SelectedValue, 
+                        DateTime.DaysInMonth((int)comboBoxYear.SelectedValue, 
+                        (int)comboBoxMonth.SelectedValue), 23, 59, 59);
+
                 }
 
                 EntryStore.Entry[] entries = EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime);
@@ -128,6 +146,8 @@ namespace ReceiptVault
                     Debug.WriteLine(entry.Total);
                     Debug.WriteLine("-------/entry----------");
                 }
+
+                populateGraph(beginDateTime, endDateTime);
 
             }
         }

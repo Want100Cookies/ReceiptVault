@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
 
@@ -41,10 +43,44 @@ namespace ReceiptVault
             (VATChart.Series[0] as LineSeries).ItemsSource = listSource;
         }
 
+        /// <summary>
+        /// sidebar navigatie:
+        /// </summary>
+        private void newRecieptClicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(newEntryScreen));
+        }
 
-        private void homeText_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void VATClicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(VATScreen));
+        }
+
+        private void spendingsClicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(spendingsScreen));
+        }
+
+        private void homeClicked(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainPage));
         }
+
+        /// <summary>
+        /// note: de volgende twee events zijn voor het veranderen van de mouse pointer wanneer er een hover plaatsvind over 1 van de 4 menu items.        
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBlockHome_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor =
+                new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Hand, 1);
+        }
+
+        private void TextBlockHome_OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
+        }
+
     }
 }
