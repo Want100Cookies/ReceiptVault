@@ -95,8 +95,6 @@ namespace ReceiptVault
                 // Create a decoder from the stream. With the decoder, we can get  
                 // the properties of the image. 
                 BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                //note: vanaf hierboven werk het niet.
-
 
                 // The scaledSize of original image. 
                 uint scaledWidth = (uint)Math.Floor(decoder.PixelWidth * scale);

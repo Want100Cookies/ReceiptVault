@@ -84,9 +84,35 @@ namespace ReceiptVault
             takePicture();
         }
 
+        /// <summary>
+        /// Methode die wordt aangeroepen wanneer er op de accept button wordt geklikt, hierin wordt 
+        /// </summary>
         public void acceptEntry()
         {
+            // DateTime dt = Convert.ToDateTime(picker.Date);
+            Debug.WriteLine(picker.Date.GetType());
+            DateTimeOffset date = (DateTimeOffset)picker.Date;
+            DateTime dt = date.DateTime;
 
+            //note: picture encoding here.
+
+            // Executing: insert into "Entry"("StoreName", "Total", "VATpercentage", "Date", "Receipt") values(?,?,?,?,?)
+
+            entry = new EntryStore.Entry
+            {
+                StoreName = textBoxShopName.Text,
+                Total = double.Parse(textBoxTotal.Text),
+                VATpercentage = Int32.Parse(textBoxVAT.Text),
+                Date = dt,
+                Receipt = receipt
+            };
+
+            Debug.WriteLine(entry.StoreName);
+            EntryStore.Instance.SaveEntry(entry);
+            foreach (EntryStore.Entry enry in EntryStore.Instance.RetrieveEntry())
+            {
+                Debug.WriteLine(enry.Id);
+            }
         }
 
         /// <summary>
@@ -110,10 +136,10 @@ namespace ReceiptVault
             //image saven:
             //Debug.WriteLine("image proberen te saven in " + ApplicationData.Current.LocalFolder);
             //note: dit gaan linken met iets in de db.
-            //    await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
-            //   this.photo = photo;
+            await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
+            this.photo = photo;
             //  Debug.WriteLine("image saved");
-            
+
             receipt = await ReadFile(photo);
 
               IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
@@ -253,36 +279,7 @@ namespace ReceiptVault
 
         private void buttonAccept_Click(object sender, RoutedEventArgs e)
         {
-           // DateTime dt = Convert.ToDateTime(picker.Date);
-            Debug.WriteLine(picker.Date.GetType());
-            DateTimeOffset date = (DateTimeOffset) picker.Date;
-            DateTime dt = date.DateTime;
-
-            //note: picture encoding here.
-
-            Debug.WriteLine("--------------");
-            Debug.WriteLine("Receipt is op dit moment: " + receipt.GetType());
-            Debug.WriteLine("--------------");
-
-            Debug.WriteLine(dt.GetType());
-
-           // Executing: insert into "Entry"("StoreName", "Total", "VATpercentage", "Date", "Receipt") values(?,?,?,?,?)
-
-            entry = new EntryStore.Entry
-            {
-                StoreName = textBoxShopName.Text,
-                Total = double.Parse(textBoxTotal.Text),
-                VATpercentage = Int32.Parse(textBoxVAT.Text),
-                Date = dt,
-                Receipt = receipt
-            };
-
-            Debug.WriteLine(entry.StoreName);
-            EntryStore.Instance.SaveEntry(entry);
-            foreach (EntryStore.Entry enry in EntryStore.Instance.RetrieveEntry())
-            {
-                Debug.WriteLine(enry.Id);
-            }
+            acceptEntry();
         }
 
 
