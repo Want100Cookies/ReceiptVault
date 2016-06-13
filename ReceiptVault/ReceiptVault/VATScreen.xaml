@@ -9,6 +9,7 @@
     mc:Ignorable="d"  Width="1187">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,0.2,0">
+
         <RelativePanel HorizontalAlignment="Left" Height="1080" VerticalAlignment="Top" Width="142">
             <RelativePanel.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -21,6 +22,7 @@
             <TextBlock x:Name="textBlockUitgaven" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Uitgaven" VerticalAlignment="Top" Margin="10,74,-10.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="spendingsClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
             <TextBlock x:Name="textBlockBTW" HorizontalAlignment="Left" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top" Margin="10,106,-10.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="VATClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
         </RelativePanel>
+
         <MediaElement x:Name="mediaPreivew"
               Width="320" />
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="202,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="66" Width="289" FontSize="40">
@@ -35,7 +37,7 @@
         </TextBlock>
 
         <Charting:Chart x:Name="VATChart" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,253,72,0" Width="681" Height="421">
-            <Charting:LineSeries x:Name="VATValues" Title="Store Selection" Margin="0" IndependentValuePath="Total" DependentValuePath="VATpercentage" IsSelectionEnabled="true"/>
+            <Charting:ColumnSeries x:Name="VATValues" Title="Store Selection" Margin="0" IndependentValuePath="Total" DependentValuePath="VATpercentage" IsSelectionEnabled="true"/>
         </Charting:Chart>
 
         <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="439,208,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="-0.419,0.24">
@@ -50,6 +52,7 @@
         </TextBlock>
         <CalendarDatePicker HorizontalAlignment="Left" Margin="468,203,0,0" VerticalAlignment="Top"/>
         <CalendarDatePicker HorizontalAlignment="Left" Margin="684,203,0,0" VerticalAlignment="Top"/>
+       <!-- <TextBlock x:Name="homeText" HorizontalAlignment="Left" Margin="10,60,0,0" TextWrapping="Wrap" Text="HOME" VerticalAlignment="Top" FontWeight="Bold" FontSize="24" PointerPressed="homeText_PointerPressed"/> -->
 
 
 

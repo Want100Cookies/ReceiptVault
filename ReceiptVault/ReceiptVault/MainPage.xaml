@@ -23,7 +23,7 @@
         </RelativePanel>
 
         <ScrollViewer Margin="142,0,0,0">
-            <controls:WrapPanel Name="panelReceipts" Margin="142,10,10,10" Width="Auto" HorizontalAlignment="Stretch">
+            <controls:WrapPanel x:Name="panelReceipts" Margin="142,10,10,10" Width="Auto" HorizontalAlignment="Stretch">
                 <TextBlock Text="Here is the news that should wrap around." TextWrapping="Wrap"/>
             </controls:WrapPanel>
         </ScrollViewer>

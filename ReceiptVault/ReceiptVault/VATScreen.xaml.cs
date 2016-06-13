@@ -14,38 +14,60 @@ using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 namespace ReceiptVault
 {
 
-    //public class TestStore
-    //{
-    //    public String Name { get; set; }
-    //    public int Amount { get; set; }
 
-    //}
 
     public sealed partial class VATScreen : Page
     {
+        //List with entries
+        List<EntryStore.Entry> listSource;
 
         public VATScreen()
         {
-            this.InitializeComponent(); 
-            Windows.UI.Xaml.Controls.ListBoxItem addStore = new Windows.UI.Xaml.Controls.ListBoxItem();
-            addStore.Content = "dafg";
-            listBox1.Items.Add(addStore);
+            listSource = new List<EntryStore.Entry>();
+            this.InitializeComponent();
+            loadListBox();
             LoadChartContents();
-            Debug.WriteLine("test completed");
-            
         }
 
+        //Loads the date and VAT price in the chart
         private void LoadChartContents()
         {
-            List <EntryStore.Entry> listSource = new List<EntryStore.Entry>();
-            listSource.Add(new EntryStore.Entry() { VATpercentage = 21, Total = 20.23 });
-                
-            (VATChart.Series[0] as LineSeries).ItemsSource = listSource;
+            listSource.Add(new EntryStore.Entry() { VATpercentage = 21, Date = new DateTime(2015, 12, 12) });
+
+            (VATChart.Series[0] as ColumnSeries).ItemsSource = listSource;
         }
 
-        /// <summary>
-        /// sidebar navigatie:
-        /// </summary>
+        private void LoadChartContents2(DateTime beginDateTime, DateTime endDateTime)
+        {
+            
+
+            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime))
+            {
+                //this looks very weird. Deze regel haalt de tijd weg bij de dateTime, op deze manier staat worden de uitgaven per dag op geteld (en niet per dag + tijdstip).
+                entry.Date = entry.Date.Date;
+                listSource.Add(entry);
+            }
+
+            (VATChart.Series[0] as ColumnSeries).ItemsSource = listSource;
+
+        }
+
+
+
+
+
+        //Loads all the store names in the listbox
+        private void loadListBox()
+        {
+            foreach (String storenames in EntryStore.Instance.getAllStoreNames())
+            {
+                Windows.UI.Xaml.Controls.ListBoxItem addStore = new Windows.UI.Xaml.Controls.ListBoxItem();
+                addStore.Content = storenames;
+                listBox1.Items.Add(addStore);
+            }
+        }
+
+        //Loads the menubar
         private void newRecieptClicked(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(newEntryScreen));
@@ -81,6 +103,8 @@ namespace ReceiptVault
         {
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
         }
+
+      
 
     }
 }
