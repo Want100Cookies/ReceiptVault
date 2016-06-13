@@ -40,11 +40,11 @@ namespace ReceiptVault
         /// <summary>
         /// Data uit de database rippen aan de hand van begin- en endDates.
         /// </summary>
-        private void populateGraph(DateTime beginDateTime, DateTime endDateTime)
+        private void populateGraph(DateTime beginDateTime, DateTime endDateTime, string[] storeNames)
         {
             List<EntryStore.Entry> chartData = new List<EntryStore.Entry>();
 
-            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime))
+            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime, storeNames))
             {
                 //this looks very weird. Deze regel haalt de tijd weg bij de dateTime, op deze manier staat worden de uitgaven per dag op geteld (en niet per dag + tijdstip).
                 entry.Date = entry.Date.Date;
@@ -73,6 +73,8 @@ namespace ReceiptVault
                     {
                         CheckBox check = new CheckBox();
                         check.Content = storeName;
+                        check.Unchecked += Check_Checked;
+                        check.Checked += Check_Checked;
                         listBoxStores.Items.Add(check);
                     }
                 }
@@ -83,11 +85,19 @@ namespace ReceiptVault
                 {
                     CheckBox check = new CheckBox();
                     check.Content = entry.StoreName;
+                    check.Unchecked += Check_Checked;
+                    check.Checked += Check_Checked;
                     listBoxStores.Items.Add(check);
                 }
             }
         }
-       
+
+        private void Check_Checked(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("event fired");
+            filterDate();
+        }
+
         /// <summary>
         /// filter de graph op begin- en einddatum.
         /// </summary>
@@ -147,7 +157,20 @@ namespace ReceiptVault
                     Debug.WriteLine("-------/entry----------");
                 }
 
-                populateGraph(beginDateTime, endDateTime);
+                string[] storeNames = new string[listBoxStores.Items.Count];
+                int i = 0;
+                if (listBoxStores.Items != null)
+                    foreach (CheckBox checkBox in listBoxStores.Items)
+                    {
+                        if (checkBox.IsChecked != null && checkBox.IsChecked.Value)
+                        {
+                            Debug.WriteLine(checkBox.Content);
+                            storeNames[i] = checkBox.Content.ToString();
+                            i++;
+                        }
+                    }
+
+                populateGraph(beginDateTime, endDateTime, storeNames);
 
             }
         }
@@ -265,5 +288,11 @@ namespace ReceiptVault
         {
             filterDate();
         }
+
+        private void ListBoxStores_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            filterDate();
+        }
+
     }
 }

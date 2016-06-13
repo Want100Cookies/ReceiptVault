@@ -92,6 +92,24 @@ namespace ReceiptVault
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="stores">Array of storenames you want</param>
+        /// <returns></returns>
+        public Entry[] RetrieveEntry(DateTime startDate, DateTime endDate, string[] stores)
+        {
+            using (var db = DbConnection)
+            {
+                db.TraceListener = new DebugTraceListener();
+
+                return db.Table<Entry>().Where(s => s.Date >= startDate
+                                                          && s.Date <= endDate).Where(s => stores.Contains(s.StoreName)).ToArray();
+            }
+        }
+
+        /// <summary>
         /// Get all entries from the database.
         /// </summary>
         /// <returns>Array of entries.</returns>
