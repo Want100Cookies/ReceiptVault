@@ -9,7 +9,7 @@
     xmlns:charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource AppBarBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <RelativePanel HorizontalAlignment="Left" Height="1080" Width="204
                        ">
             <RelativePanel.Background>
@@ -43,7 +43,7 @@
         <TextBlock x:Name="textBlock1_Copy" HorizontalAlignment="Left" Margin="833,707,0,0" TextWrapping="Wrap" Text="Maand" VerticalAlignment="Top" RenderTransformOrigin="0.279,0.483"/>
         <TextBlock x:Name="textBlock1_Copy1" HorizontalAlignment="Left" Margin="1036,707,0,0" TextWrapping="Wrap" Text="Jaar" VerticalAlignment="Top" RenderTransformOrigin="0.279,0.483"/>
         <Button x:Name="buttonReset" Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="527,87,0,0" Width="169" Height="32" Click="buttonReset_Click"/>
-        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Uitgaven" VerticalAlignment="Top" Margin="204,10,0,0" FontSize="48"/>
+        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Uitgaven" VerticalAlignment="Top" Margin="209,10,0,0" FontSize="48"/>
 
 
 

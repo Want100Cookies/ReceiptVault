@@ -13,59 +13,114 @@ using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
 namespace ReceiptVault
 {
-
-
-
     public sealed partial class VATScreen : Page
     {
-        //List with entries
-        List<EntryStore.Entry> listSource;
-
         public VATScreen()
         {
-            listSource = new List<EntryStore.Entry>();
             this.InitializeComponent();
-            loadListBox();
-            LoadChartContents();
+            startPicker.Date = DateTime.Now.AddDays(-30);
+            endPicker.Date = DateTime.Now;
+            filterStoreName();
         }
 
-        //Loads the date and VAT price in the chart
-        private void LoadChartContents()
+        public void filterDate()
         {
-            listSource.Add(new EntryStore.Entry() { VATpercentage = 21, Date = new DateTime(2015, 12, 12) });
+            string[] storeNames = new string[listBoxStores.Items.Count];
+            int i = 0;
+            if (listBoxStores.Items != null)
+            {
+                foreach (CheckBox checkBox in listBoxStores.Items)
+                {
+                    if (checkBox.IsChecked != null && checkBox.IsChecked.Value)
+                    {
+                        Debug.WriteLine(checkBox.Content);
+                        storeNames[i] = checkBox.Content.ToString();
+                        i++;
+                    }
+                }
+            }
 
-            (VATChart.Series[0] as ColumnSeries).ItemsSource = listSource;
+            DateTimeOffset date = (DateTimeOffset)startPicker.Date;
+            DateTime startDateTime = date.DateTime;
+
+            DateTimeOffset date2 = (DateTimeOffset)startPicker.Date;
+            DateTime endDateTime = date.DateTime;
+
+            populateGraph(startDateTime, endDateTime, storeNames);
         }
 
-        private void LoadChartContents2(DateTime beginDateTime, DateTime endDateTime)
+        /// <summary>
+        /// filter de listBoxStores op de inhoud van textBoxSearch.
+        /// note: werkt goed, deze mag rik ook hebben.
+        /// </summary>
+        private void filterStoreName()
         {
-            
+            string[] stores = EntryStore.Instance.getAllStoreNames(); //return original data from Store
 
-            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime))
+            listBoxStores.Items.Clear();
+
+            if (!string.IsNullOrEmpty(textBoxSearch.Text))
+            {
+                foreach (String storeName in stores)
+                {
+                    if (storeName.ToLower().Contains(textBoxSearch.Text.ToLower()))
+                    {
+                        CheckBox check = new CheckBox();
+                        check.Content = storeName;
+                        check.Unchecked += Check_Checked;
+                        check.Checked += Check_Checked;
+                        listBoxStores.Items.Add(check);
+                    }
+                }
+            }
+            else
+            {
+                foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
+                {
+                    CheckBox check = new CheckBox();
+                    check.Content = entry.StoreName;
+                    check.Unchecked += Check_Checked;
+                    check.Checked += Check_Checked;
+                    listBoxStores.Items.Add(check);
+                }
+            }
+        }
+
+        private void Check_Checked(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("event fired");
+            filterDate();
+        }
+
+        /// <summary>
+        /// Data uit de database rippen aan de hand van begin- en endDates.
+        /// </summary>
+        private void populateGraph(DateTime beginDateTime, DateTime endDateTime, string[] storeNames)
+        {
+            List<EntryStore.Entry> chartData = new List<EntryStore.Entry>();
+
+            // foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime, storeNames))
+            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
             {
                 //this looks very weird. Deze regel haalt de tijd weg bij de dateTime, op deze manier staat worden de uitgaven per dag op geteld (en niet per dag + tijdstip).
                 entry.Date = entry.Date.Date;
-                listSource.Add(entry);
+                chartData.Add(entry);
             }
 
-            (VATChart.Series[0] as ColumnSeries).ItemsSource = listSource;
-
+            (VATChart.Series[0] as ColumnSeries).ItemsSource = chartData;
         }
 
-
-
-
-
-        //Loads all the store names in the listbox
-        private void loadListBox()
+        private void ListBoxStores_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (String storenames in EntryStore.Instance.getAllStoreNames())
-            {
-                Windows.UI.Xaml.Controls.ListBoxItem addStore = new Windows.UI.Xaml.Controls.ListBoxItem();
-                addStore.Content = storenames;
-                listBox1.Items.Add(addStore);
-            }
+            filterDate();
         }
+
+        private void TextBoxSearch_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            filterStoreName();
+        }
+
+        #region side menu
 
         //Loads the menubar
         private void newRecieptClicked(object sender, RoutedEventArgs e)
@@ -96,7 +151,7 @@ namespace ReceiptVault
         private void TextBlockHome_OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
             Window.Current.CoreWindow.PointerCursor =
-                new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Hand, 1);
+                new CoreCursor(CoreCursorType.Hand, 1);
         }
 
         private void TextBlockHome_OnPointerExited(object sender, PointerRoutedEventArgs e)
@@ -104,7 +159,7 @@ namespace ReceiptVault
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
         }
 
-      
+        #endregion
 
     }
 }

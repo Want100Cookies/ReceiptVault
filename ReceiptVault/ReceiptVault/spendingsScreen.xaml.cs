@@ -146,7 +146,7 @@ namespace ReceiptVault
                         (int)comboBoxMonth.SelectedValue), 23, 59, 59);
 
                 }
-
+                
                 EntryStore.Entry[] entries = EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime);
                 foreach (EntryStore.Entry entry in entries)
                 {
@@ -161,6 +161,7 @@ namespace ReceiptVault
                 string[] storeNames = new string[listBoxStores.Items.Count];
                 int i = 0;
                 if (listBoxStores.Items != null)
+                {
                     foreach (CheckBox checkBox in listBoxStores.Items)
                     {
                         if (checkBox.IsChecked != null && checkBox.IsChecked.Value)
@@ -170,6 +171,7 @@ namespace ReceiptVault
                             i++;
                         }
                     }
+                }
 
                 populateGraph(beginDateTime, endDateTime, storeNames);
 

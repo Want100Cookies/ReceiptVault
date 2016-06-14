@@ -9,7 +9,7 @@
     mc:Ignorable="d"  Width="1187">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,0.2,0">
-        <RelativePanel HorizontalAlignment="Left" Height="1080" VerticalAlignment="Top" Width="204">
+        <RelativePanel Height="1080" HorizontalAlignment="Left" Width="204">
             <RelativePanel.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFDEF3FF" Offset="0.994"/>
@@ -29,29 +29,26 @@
 
         <MediaElement x:Name="mediaPreivew"
               Width="320" />
-        <ListBox x:Name="listBox1" HorizontalAlignment="Left" Height="421" Margin="254,248,0,0" VerticalAlignment="Top" Width="185" RenderTransformOrigin="0.5,0.5"/>
-        <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="249,208,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="185">
-        	<Run Text="Selecteer een winkel"/>
-        	<LineBreak/>
-        </TextBlock>
 
-        <Charting:Chart x:Name="VATChart" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,253,72,0" Width="681" Height="421">
-            <Charting:ColumnSeries x:Name="VATValues" Title="Store Selection" Margin="0" IndependentValuePath="Total" DependentValuePath="VATpercentage" IsSelectionEnabled="true"/>
+        <Charting:Chart x:Name="VATChart" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,139,37,0" Width="681" Height="421">
+            <Charting:ColumnSeries x:Name="VATValues" Title="Betaalde BTW in euro" Margin="0" IndependentValuePath="Date" DependentValuePath="VATpercentage" IsSelectionEnabled="true"/>
         </Charting:Chart>
 
-        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="439,208,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="-0.419,0.24">
+        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="664,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="-0.419,0.24">
         	<Run Text="Van"/>
         	<LineBreak/>
         	<Run/>
         </TextBlock>
-        <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Margin="659,204,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
+        <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Margin="884,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
         	<Run Text="Tot"/>
         	<LineBreak/>
         	<Run/>
         </TextBlock>
-        <CalendarDatePicker HorizontalAlignment="Left" Margin="468,203,0,0" VerticalAlignment="Top"/>
-        <CalendarDatePicker HorizontalAlignment="Left" Margin="684,203,0,0" VerticalAlignment="Top"/>
+        <CalendarDatePicker x:Name="startPicker" HorizontalAlignment="Left" Margin="693,89,0,0" VerticalAlignment="Top"/>
+        <CalendarDatePicker x:Name="endPicker" HorizontalAlignment="Left" Margin="909,89,0,0" VerticalAlignment="Top"/>
         <TextBlock x:Name="textBlock2_Copy" HorizontalAlignment="Left" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top" Margin="209,10,0,0" FontSize="48"/>
+        <TextBox x:Name="textBoxSearch" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="215,89,0,0" Width="249" PlaceholderText="Voer hier een winkelnaam in" TextChanged="TextBoxSearch_OnTextChanged"/>
+        <ListBox x:Name="listBoxStores" HorizontalAlignment="Left" Height="790" VerticalAlignment="Top" Width="249" Margin="215,121,0,0" SelectionChanged="ListBoxStores_OnSelectionChanged"/>
         <!-- <TextBlock x:Name="homeText" HorizontalAlignment="Left" Margin="10,60,0,0" TextWrapping="Wrap" Text="HOME" VerticalAlignment="Top" FontWeight="Bold" FontSize="24" PointerPressed="homeText_PointerPressed"/> -->
 
 

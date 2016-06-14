@@ -80,7 +80,7 @@ namespace ReceiptVault
 
                     panelEntry.Padding = new Thickness(3, 1, 3, 1);
 
-                    panelEntry.Margin = new Thickness(20, 10, 0, 0);
+                    panelEntry.Margin = new Thickness(0, 10, 20, 0);
 
                     //todo: image convertion here.
                     // foreach (byte b in entry.Receipt)
