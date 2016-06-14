@@ -104,7 +104,6 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainScreen.cs" />
     <Compile Include="navigator.cs" />
     <Compile Include="newEntryScreenScreen.xaml.cs">
       <DependentUpon>newEntryScreenScreen.xaml</DependentUpon>
@@ -124,10 +123,22 @@
     <None Include="ReceiptVault_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\file.bmp" />
+    <Content Include="Assets\graph.png" />
+    <Content Include="Assets\home.bmp" />
+    <Content Include="Assets\spending.bmp" />
+    <Content Include="Assets\splashScreen.png" />
+    <Content Include="Assets\splashScreen.scale-100.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\testBonnetje.bmp" />
+    <Content Include="Assets\testBonnetje1.jpg" />
+    <Content Include="Assets\testBonnetje2.jpg" />
+    <Content Include="Assets\testBonnetje3.jpg" />
+    <Content Include="Assets\testBonnetje4.jpg" />
+    <Content Include="Assets\testBonnetje5.jpg" />
+    <Content Include="Assets\testBonnetje6.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />

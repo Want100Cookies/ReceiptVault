@@ -9,18 +9,23 @@
     xmlns:charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <RelativePanel HorizontalAlignment="Left" Height="1080" VerticalAlignment="Top" Width="142">
+    <Grid Background="{ThemeResource AppBarBackgroundThemeBrush}">
+        <RelativePanel HorizontalAlignment="Left" Height="1080" Width="204
+                       ">
             <RelativePanel.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFDEF3FF" Offset="0.994"/>
                     <GradientStop Color="White"/>
                 </LinearGradientBrush>
             </RelativePanel.Background>
-            <TextBlock x:Name="textBlockHome" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Home" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Tapped="homeClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited" Margin="10,10,-10,-10.333"/>
-            <TextBlock x:Name="textBlockNieuweBon" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Nieuwe bon" VerticalAlignment="Top" Margin="10,42,-43.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="newRecieptClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
-            <TextBlock x:Name="textBlockUitgaven" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Uitgaven" VerticalAlignment="Top" Margin="10,74,-10.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="spendingsClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
-            <TextBlock x:Name="textBlockBTW" HorizontalAlignment="Left" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top" Margin="10,106,-10.333,-10.333" FontSize="22" FontWeight="Bold" Tapped="VATClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
+            <TextBlock x:Name="textBlockHome" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Home" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Tapped="homeClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited" Margin="43,10,-43,-10"/>
+            <TextBlock x:Name="textBlockNieuweBon" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Nieuwe bon" VerticalAlignment="Top" Margin="43,44,-76,-12" FontSize="22" FontWeight="Bold" Tapped="newRecieptClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
+            <TextBlock x:Name="textBlockUitgaven" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Uitgaven" VerticalAlignment="Top" Margin="43,78,-43,-14" FontSize="22" FontWeight="Bold" Tapped="spendingsClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
+            <TextBlock x:Name="textBlockBTW" HorizontalAlignment="Left" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top" Margin="43,112,-43,-16" FontSize="22" FontWeight="Bold" Tapped="VATClicked" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
+            <Image x:Name="image" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="28" Source="Assets/home.bmp" Margin="10,11,0,-1"/>
+            <Image x:Name="image_Copy" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="28" Source="Assets/file.bmp" Margin="10,50,0,-40"/>
+            <Image x:Name="image_Copy1" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="28" Source="Assets/spending.bmp" Margin="10,78,0,-68"/>
+            <Image x:Name="image_Copy2" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="28" Source="Assets/graph.png" Margin="10,113,0,-103"/>
         </RelativePanel>
         <TextBox x:Name="textBoxSearch" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="229,87,0,0" Width="253" PlaceholderText="Voer hier een winkelnaam in" TextChanged="TextBoxSearch_OnTextChanged"/>
         <ListBox x:Name="listBoxStores" HorizontalAlignment="Left" Height="790" VerticalAlignment="Top" Width="253" Margin="229,119,0,0" SelectionChanged="ListBoxStores_OnSelectionChanged"/>
@@ -38,6 +43,7 @@
         <TextBlock x:Name="textBlock1_Copy" HorizontalAlignment="Left" Margin="833,707,0,0" TextWrapping="Wrap" Text="Maand" VerticalAlignment="Top" RenderTransformOrigin="0.279,0.483"/>
         <TextBlock x:Name="textBlock1_Copy1" HorizontalAlignment="Left" Margin="1036,707,0,0" TextWrapping="Wrap" Text="Jaar" VerticalAlignment="Top" RenderTransformOrigin="0.279,0.483"/>
         <Button x:Name="buttonReset" Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="527,87,0,0" Width="169" Height="32" Click="buttonReset_Click"/>
+        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Uitgaven" VerticalAlignment="Top" Margin="204,10,0,0" FontSize="48"/>
 
 
 

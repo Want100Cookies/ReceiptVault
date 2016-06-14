@@ -61,16 +61,31 @@ namespace ReceiptVault
 
              //   panelReceipts.Padding = new Thickness(20, 10, 0, 0);
 
+
+                int i = 1;
                 //entries
                 foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
                 {
                     entries.Add(entry);
                     //Debug.WriteLine("Entry found! " + entry.Id);
                     StackPanel panelEntry = new StackPanel();
+
+                    panelEntry.BorderThickness = new Thickness(1);
+                   // panelEntry.Background = new SolidColorBrush(Colors.Chocolate);
+
+                    panelEntry.BorderBrush = new SolidColorBrush(Colors.Black);
+
+                    panelEntry.Width = 250;
+                    panelEntry.Height = 200;
+
+                    panelEntry.Padding = new Thickness(3, 1, 3, 1);
+
+                    panelEntry.Margin = new Thickness(20, 10, 0, 0);
+
                     //todo: image convertion here.
-                   // foreach (byte b in entry.Receipt)
+                    // foreach (byte b in entry.Receipt)
                     {
-                 //       Debug.WriteLine("byte found: " + b);
+                        //       Debug.WriteLine("byte found: " + b);
                     }
 
 
@@ -86,36 +101,39 @@ namespace ReceiptVault
                         //note: het verhaal over het opslaan van images laten we even.
                         Image img = new Image();
                         //File.WriteAllBytes("receipt.jpg", entry.Receipt);
-       
-
+                        img.Source = new BitmapImage(new Uri("ms-appx:///Assets/testBonnetje" + i + ".jpg"));
+                        img.Height = panelEntry.Height - 20;
+                        
                         panelEntry.Children.Add(img);
                     }
 
-
-
                     //storeName:
+                    StackPanel stackText = new StackPanel();
+                    stackText.Orientation = Orientation.Horizontal;
+                    stackText.Width = panelEntry.Width;
+
                     TextBlock txtStore = new TextBlock();
                     txtStore.Text = entry.StoreName;
+                    txtStore.Width = panelEntry.Width - 55;
+                //    txtStore.Margin = new Thickness(0, 0, 100, 0);
 
                     TextBlock txtAmount = new TextBlock();
                     txtAmount.Text = entry.Total.ToString("'€'########.00");
+                //    txtAmount.Margin = new Thickness(100, 0, 0, 0);
 
                     //finally: add to the panel.
-                    panelEntry.Children.Add(txtStore);
-                    panelEntry.Children.Add(txtAmount);
+                    stackText.Children.Add(txtStore);
+                    stackText.Children.Add(txtAmount);
 
-                    panelEntry.BorderThickness = new Thickness(1);
-                    panelEntry.Background = new SolidColorBrush(Colors.Chocolate);
+                    panelEntry.Children.Add(stackText);
 
-                    panelEntry.BorderBrush = new SolidColorBrush(Colors.Red);
-
-                    panelEntry.Width = 250;
-                    panelEntry.Height = 200;
-
-                    panelEntry.Margin = new Thickness(20, 10, 0, 0);
-                    
                     panelReceipts.Children.Add(panelEntry);
-                    
+
+                    i++;
+                    if (i == 7)
+                    {
+                        i = 1;
+                    }
                 }
             }
        }

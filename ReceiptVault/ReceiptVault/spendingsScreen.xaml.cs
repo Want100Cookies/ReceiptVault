@@ -46,9 +46,10 @@ namespace ReceiptVault
 
             foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime, storeNames))
             {
+                
                 //this looks very weird. Deze regel haalt de tijd weg bij de dateTime, op deze manier staat worden de uitgaven per dag op geteld (en niet per dag + tijdstip).
                 entry.Date = entry.Date.Date;
-                chartData.Add(entry);
+                                chartData.Add(entry);
             }
 
             (spendingChart.Series[0] as ColumnSeries).ItemsSource = chartData;
@@ -282,6 +283,7 @@ namespace ReceiptVault
         private void buttonReset_Click(object sender, RoutedEventArgs e)
         {
             comboBoxMonth.SelectedIndex = comboBoxWeek.SelectedIndex = comboBoxYear.SelectedIndex = 0;
+            filterStoreName();
         }
 
         private void ComboBoxWeek_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -293,6 +295,5 @@ namespace ReceiptVault
         {
             filterDate();
         }
-
     }
 }

@@ -16,6 +16,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Profile;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -87,10 +88,31 @@ namespace ReceiptVault
         /// <summary>
         /// Methode die wordt aangeroepen wanneer er op de accept button wordt geklikt, hierin wordt 
         /// </summary>
-        public void acceptEntry()
+        public async void acceptEntry()
         {
+            if (textBoxTotal.Text.Trim().Equals(""))
+            {
+                var dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. het totaal goed in.");
+                await dialogError.ShowAsync();
+                return;
+            }
+
+            if (textBoxShopName.Text.Trim().Equals(""))
+            {
+                var dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. de winkel naam goed in.");
+                await dialogError.ShowAsync();
+                return;
+            }
+
+            if (textBoxVAT.Text.Trim().Equals(""))
+            {
+                var dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. het btw bedrag goed in.");
+                await dialogError.ShowAsync();
+                return;
+            }
+
+
             // DateTime dt = Convert.ToDateTime(picker.Date);
-            Debug.WriteLine(picker.Date.GetType());
             DateTimeOffset date = (DateTimeOffset)picker.Date;
             DateTime dt = date.DateTime;
 
@@ -113,6 +135,9 @@ namespace ReceiptVault
             {
                 Debug.WriteLine(enry.Id);
             }
+
+            var dialog = new MessageDialog("Het nieuwe bonnetje is succesvol opgeslagen.");
+            await dialog.ShowAsync();
         }
 
         /// <summary>
@@ -122,7 +147,7 @@ namespace ReceiptVault
         {
             CameraCaptureUI captureUI = new CameraCaptureUI();
             captureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;
-            captureUI.PhotoSettings.CroppedSizeInPixels = new Size(200, 200);
+            captureUI.PhotoSettings.CroppedSizeInPixels = new Size(imgNewReceipt.Width, imgNewReceipt.Height);
 
             StorageFile photo = await captureUI.CaptureFileAsync(CameraCaptureUIMode.Photo);
 
@@ -281,8 +306,7 @@ namespace ReceiptVault
         {
             acceptEntry();
         }
-
-
+        
         public async static Task<BitmapImage> ImageFromBytes(Byte[] bytes)
         {
             BitmapImage image = new BitmapImage();
