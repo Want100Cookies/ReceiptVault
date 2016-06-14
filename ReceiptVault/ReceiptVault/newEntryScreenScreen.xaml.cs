@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -63,6 +65,10 @@ namespace ReceiptVault
             dragFinishPos = new int[2];
 
             picker.Date = DateTime.Now;
+
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("nl-NL");
+
+
         }
 
         /// <summary>
@@ -114,23 +120,34 @@ namespace ReceiptVault
 
             // DateTime dt = Convert.ToDateTime(picker.Date);
             DateTimeOffset date = (DateTimeOffset)picker.Date;
-            DateTime dt = date.DateTime;
+            DateTime dt = DateTime.Parse(date.DateTime.ToString(), CultureInfo.CurrentCulture);
+            
 
             //note: picture encoding here.
 
             // Executing: insert into "Entry"("StoreName", "Total", "VATpercentage", "Date", "Receipt") values(?,?,?,?,?)
 
-            entry = new EntryStore.Entry
+            try
             {
-                StoreName = textBoxShopName.Text,
-                Total = double.Parse(textBoxTotal.Text),
-                VATpercentage = Int32.Parse(textBoxVAT.Text),
-                Date = dt,
-                Receipt = receipt
-            };
+                entry = new EntryStore.Entry
+                {
+                    StoreName = textBoxShopName.Text.Trim(),
+                    Total = double.Parse(textBoxTotal.Text),
+                    VATpercentage = Int32.Parse(textBoxVAT.Text),
+                    Date = dt,
+                    Receipt = receipt
+                };
 
-            Debug.WriteLine(entry.StoreName);
-            EntryStore.Instance.SaveEntry(entry);
+                Debug.WriteLine(entry.StoreName);
+                EntryStore.Instance.SaveEntry(entry);
+            }
+            catch (Exception)
+            {
+                var error = new MessageDialog("Er is wat mis gegaan met het opslaan van de gegevens, zijn alle invoer velden correct ingevuld?");
+                await error.ShowAsync();
+                return;
+            }
+   
             foreach (EntryStore.Entry enry in EntryStore.Instance.RetrieveEntry())
             {
                 Debug.WriteLine(enry.Id);
@@ -180,6 +197,10 @@ namespace ReceiptVault
            // imgNewReceipt.Source = bitmapSource;
 
             imgNewReceipt.Source = await ImageFromBytes(receipt);
+
+            imgArrowFoto.Visibility = Visibility.Collapsed;
+            imgArrowToPicture.Visibility = Visibility.Visible;
+            TextBlockFeedback.Text = "Mooi, trek nu met uw muis een rechthoek \r\nom het totaalbedrag.";
 
         }
 
@@ -262,8 +283,11 @@ namespace ReceiptVault
             textBoxTotal.Text = scan.getScannedText();
 
             //receipt = scan.GetReceipt();
-           // Debug.WriteLine(receipt.ToString());
-            Debug.WriteLine("Invoerveld in aangepast nu.");
+            // Debug.WriteLine(receipt.ToString());
+            imgArrowToPicture.Visibility = Visibility.Collapsed;
+            imgArrowInput.Visibility = Visibility.Visible;
+            TextBlockFeedback.Text = "Goed, vul nu de benodige gegevens in.";
+            
         }
 
         private void newRecieptClicked(object sender, RoutedEventArgs e)
@@ -318,5 +342,42 @@ namespace ReceiptVault
             }
             return image;
         }
+
+        //stukje autosuggest voor de winkels:
+        private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            // Only get results when it was a user typing, 
+            // otherwise assume the value got filled in by TextMemberPath 
+            // or the handler for SuggestionChosen.
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                ObservableCollection<string> filteredStores = new ObservableCollection<string>();
+
+                //Set the ItemsSource to be your filtered dataset
+                string[] stores = EntryStore.Instance.getAllStoreNames(); //return original data from Store
+                
+                if (!string.IsNullOrEmpty(sender.Text))
+                {
+                    foreach (String storeName in stores)
+                    {
+                        if (storeName.ToLower().Contains(sender.Text.ToLower()))
+                        {
+                            filteredStores.Add(storeName);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
+                    {
+                        filteredStores.Add(entry.StoreName);
+                    }
+                }
+
+                sender.ItemsSource = filteredStores;
+
+                //sender.ItemsSource = dataset;
+            }
+        }      
     }
 }

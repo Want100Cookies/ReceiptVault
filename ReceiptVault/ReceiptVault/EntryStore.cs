@@ -148,6 +148,7 @@ namespace ReceiptVault
             {
                 db.TraceListener = new DebugTraceListener();
 
+                //note: deze werkt niet!
                 return db.Table<Entry>().Select(s => s.StoreName).Distinct().ToArray();
             }
         }

@@ -123,6 +123,7 @@
     <None Include="ReceiptVault_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\arrow.png" />
     <Content Include="Assets\file.bmp" />
     <Content Include="Assets\graph.png" />
     <Content Include="Assets\home.bmp" />

@@ -171,6 +171,12 @@ namespace ReceiptVault
                             i++;
                         }
                     }
+
+                    //er is geen enkele winkel aangevinkt: alle data laten zien.
+                    if (i == 0)
+                    {
+                        storeNames = EntryStore.Instance.getAllStoreNames();
+                    }
                 }
 
                 populateGraph(beginDateTime, endDateTime, storeNames);

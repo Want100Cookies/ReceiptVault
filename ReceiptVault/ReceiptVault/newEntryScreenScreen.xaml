@@ -30,23 +30,43 @@
         <Canvas Margin="637,10,362,218" x:Name="canvas">
             <Image x:Name="imgNewReceipt" HorizontalAlignment="Left" Height="364" VerticalAlignment="Top" Width="364" PointerPressed="dragStart" PointerReleased="dragFinish" PointerMoved="dragMove"/>
             <Rectangle x:Name="rect" StrokeThickness="3" Stroke="#ff0000" Visibility="Collapsed"></Rectangle>
+            <Image x:Name="imgArrowInput" HorizontalAlignment="Left" Height="254.971" VerticalAlignment="Top" Width="203.862" Source="Assets/arrow.png" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" Canvas.Left="450.819" Canvas.Top="234.302" Visibility="Collapsed">
+                <Image.RenderTransform>
+                    <CompositeTransform ScaleY="-1" Rotation="-36.707"/>
+                </Image.RenderTransform>
+            </Image>
         </Canvas>
 
         <Button x:Name="button" Content="Maak foto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="228,394,0,0" Click="button_Click" Height="103" Width="168"/>
 
         <MediaElement x:Name="mediaPreivew"
               Width="320" />
-        <TextBox x:Name="textBoxTotal" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="732,394,0,0" Width="265" PlaceholderText="-"/>
+        <TextBox x:Name="textBoxTotal" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="732,401,0,0" Width="265" PlaceholderText="-"/>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="637,406,0,0" TextWrapping="Wrap" Text="Totaal bedrag
                    " VerticalAlignment="Top"/>
-        <TextBox x:Name="textBoxShopName" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="732,434,0,0" Width="265" PlaceholderText="-"/>
+
         <TextBlock x:Name="textBlock_Copy" HorizontalAlignment="Left" Margin="637,446,0,0" TextWrapping="Wrap" Text="Winkel naam" VerticalAlignment="Top"/>
         <TextBlock x:Name="textBlock_Copy1" HorizontalAlignment="Left" Margin="637,487,0,0" TextWrapping="Wrap" Text="Datum" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBoxVAT" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="732,519,0,0" Width="265" PlaceholderText="-"/>
+        <TextBox x:Name="textBoxVAT" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="732,526,0,0" Width="265" PlaceholderText="-"/>
         <TextBlock x:Name="textBlock_Copy2" HorizontalAlignment="Left" Margin="637,531,0,0" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top"/>
-        <Button x:Name="buttonAccept" Content="Accepteren" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="897,556,0,0" Height="32" Width="100" Click="buttonAccept_Click"/>
+        <Button x:Name="buttonAccept" Content="Accepteren" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="897,563,0,0" Height="32" Width="100" Click="buttonAccept_Click"/>
 
-        <CalendarDatePicker Name="picker" HorizontalAlignment="Left" Height="39" Margin="732,475,0,0" VerticalAlignment="Top" Width="265"/>
+        <CalendarDatePicker Name="picker" HorizontalAlignment="Left" Height="39" Margin="732,482,0,0" VerticalAlignment="Top" Width="265"/>
         <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Nieuwe bon" VerticalAlignment="Top" Margin="209,10,0,0" FontSize="48"/>
+        <TextBlock x:Name="TextBlockFeedback" HorizontalAlignment="Left" Margin="209,74,0,0" TextWrapping="Wrap" Text="Maak eerst een foto van uw bonnetje." VerticalAlignment="Top" FontSize="22"/>
+        <Image x:Name="imgArrowFoto" HorizontalAlignment="Left" Height="250.473" VerticalAlignment="Top" Width="262.426" Margin="342.787,146.551,0,0" Source="Assets/arrow.png" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+            <Image.RenderTransform>
+                <CompositeTransform ScaleY="-1" Rotation="-57.5"/>
+            </Image.RenderTransform>
+        </Image>
+        <Image x:Name="imgArrowToPicture" HorizontalAlignment="Left" Height="288.932" VerticalAlignment="Top" Width="270.781" Margin="346.059,129.287,0,0" Source="Assets/arrow.png" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" Visibility="Collapsed">
+            <Image.RenderTransform>
+                <CompositeTransform Rotation="-181.457"/>
+            </Image.RenderTransform>
+        </Image>
+
+        <AutoSuggestBox x:Name="textBoxShopName" PlaceholderText="Zoeken" QueryIcon="Find"
+                TextChanged="AutoSuggestBox_TextChanged"
+                Margin="732,441,1259,0"/>
     </Grid>
 </Page>
