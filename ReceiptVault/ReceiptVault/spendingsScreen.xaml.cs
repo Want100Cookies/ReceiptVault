@@ -82,10 +82,10 @@ namespace ReceiptVault
             }
             else
             {
-                foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
+                foreach (string storeName in EntryStore.Instance.getAllStoreNames())
                 {
                     CheckBox check = new CheckBox();
-                    check.Content = entry.StoreName;
+                    check.Content = storeName;
                     check.Unchecked += Check_Checked;
                     check.Checked += Check_Checked;
                     listBoxStores.Items.Add(check);

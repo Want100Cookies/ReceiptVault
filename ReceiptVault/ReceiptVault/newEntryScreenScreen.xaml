@@ -42,8 +42,7 @@
         <MediaElement x:Name="mediaPreivew"
               Width="320" />
         <TextBox x:Name="textBoxTotal" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="732,401,0,0" Width="265" PlaceholderText="-"/>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="637,406,0,0" TextWrapping="Wrap" Text="Totaal bedrag
-                   " VerticalAlignment="Top"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="637,406,0,0" TextWrapping="Wrap" Text="Totaal bedrag" VerticalAlignment="Top"/>
 
         <TextBlock x:Name="textBlock_Copy" HorizontalAlignment="Left" Margin="637,446,0,0" TextWrapping="Wrap" Text="Winkel naam" VerticalAlignment="Top"/>
         <TextBlock x:Name="textBlock_Copy1" HorizontalAlignment="Left" Margin="637,487,0,0" TextWrapping="Wrap" Text="Datum" VerticalAlignment="Top"/>

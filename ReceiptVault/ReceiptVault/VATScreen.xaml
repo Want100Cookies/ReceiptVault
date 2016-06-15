@@ -31,7 +31,7 @@
               Width="320" />
 
         <Charting:Chart x:Name="VATChart" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,139,37,0" Width="681" Height="421">
-            <Charting:ColumnSeries x:Name="VATValues" Title="Betaalde BTW in euro" Margin="0" IndependentValuePath="Date" DependentValuePath="VATpercentage" IsSelectionEnabled="true"/>
+            <Charting:ColumnSeries x:Name="VATValues" Title="Betaalde BTW in euro" Margin="0" IndependentValuePath="Date" DependentValuePath="Total" IsSelectionEnabled="true"/>
         </Charting:Chart>
 
         <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="664,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="-0.419,0.24">
@@ -44,8 +44,8 @@
         	<LineBreak/>
         	<Run/>
         </TextBlock>
-        <CalendarDatePicker x:Name="startPicker" HorizontalAlignment="Left" Margin="693,89,0,0" VerticalAlignment="Top"/>
-        <CalendarDatePicker x:Name="endPicker" HorizontalAlignment="Left" Margin="909,89,0,0" VerticalAlignment="Top"/>
+        <CalendarDatePicker x:Name="startPicker" HorizontalAlignment="Left" Margin="693,89,0,0" VerticalAlignment="Top" DateChanged="StartPicker_OnDateChanged"/>
+        <CalendarDatePicker x:Name="endPicker" HorizontalAlignment="Left" Margin="909,89,0,0" VerticalAlignment="Top" DateChanged="StartPicker_OnDateChanged"/>
         <TextBlock x:Name="textBlock2_Copy" HorizontalAlignment="Left" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top" Margin="209,10,0,0" FontSize="48"/>
         <TextBox x:Name="textBoxSearch" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="215,89,0,0" Width="249" PlaceholderText="Voer hier een winkelnaam in" TextChanged="TextBoxSearch_OnTextChanged"/>
         <ListBox x:Name="listBoxStores" HorizontalAlignment="Left" Height="790" VerticalAlignment="Top" Width="249" Margin="215,121,0,0" SelectionChanged="ListBoxStores_OnSelectionChanged"/>

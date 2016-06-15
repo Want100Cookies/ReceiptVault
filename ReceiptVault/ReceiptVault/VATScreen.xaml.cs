@@ -75,10 +75,10 @@ namespace ReceiptVault
             }
             else
             {
-                foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
+                foreach (string storeName in EntryStore.Instance.getAllStoreNames())
                 {
                     CheckBox check = new CheckBox();
-                    check.Content = entry.StoreName;
+                    check.Content = storeName;
                     check.Unchecked += Check_Checked;
                     check.Checked += Check_Checked;
                     listBoxStores.Items.Add(check);
@@ -104,6 +104,7 @@ namespace ReceiptVault
             {
                 //this looks very weird. Deze regel haalt de tijd weg bij de dateTime, op deze manier staat worden de uitgaven per dag op geteld (en niet per dag + tijdstip).
                 entry.Date = entry.Date.Date;
+                entry.Total = (entry.Total/100)*entry.VATpercentage;
                 chartData.Add(entry);
             }
 
@@ -118,6 +119,11 @@ namespace ReceiptVault
         private void TextBoxSearch_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             filterStoreName();
+        }
+
+        private void StartPicker_OnDateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+        {
+            filterDate();
         }
 
         #region side menu
@@ -160,6 +166,7 @@ namespace ReceiptVault
         }
 
         #endregion
+
 
     }
 }

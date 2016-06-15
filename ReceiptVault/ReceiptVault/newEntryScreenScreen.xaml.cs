@@ -368,9 +368,9 @@ namespace ReceiptVault
                 }
                 else
                 {
-                    foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
+                    foreach (string storeName in EntryStore.Instance.getAllStoreNames())
                     {
-                        filteredStores.Add(entry.StoreName);
+                        filteredStores.Add(storeName);
                     }
                 }
 
