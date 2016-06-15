@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" Height="1088" Width="2256">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="8,0,-8,0">
-        <RelativePanel HorizontalAlignment="Left" Height="1080" VerticalAlignment="Top" Width="204">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,82,0">
+        <RelativePanel HorizontalAlignment="Left" Height="1080" VerticalAlignment="Top" Width="209">
             <RelativePanel.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFDEF3FF" Offset="0.994"/>
@@ -27,7 +27,7 @@
 
 
         <Rectangle Margin="0,5,0,0" Height="1" Fill="#ff0000" Visibility="Collapsed"/>
-        <Canvas Margin="637,10,362,218" x:Name="canvas">
+        <Canvas Margin="637,10,398,218" x:Name="canvas">
             <Image x:Name="imgNewReceipt" HorizontalAlignment="Left" Height="364" VerticalAlignment="Top" Width="364" PointerPressed="dragStart" PointerReleased="dragFinish" PointerMoved="dragMove"/>
             <Rectangle x:Name="rect" StrokeThickness="3" Stroke="#ff0000" Visibility="Collapsed"></Rectangle>
             <Image x:Name="imgArrowInput" HorizontalAlignment="Left" Height="254.971" VerticalAlignment="Top" Width="203.862" Source="Assets/arrow.png" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" Canvas.Left="450.819" Canvas.Top="234.302" Visibility="Collapsed">
