@@ -82,30 +82,17 @@ namespace ReceiptVault
 
                     panelEntry.Margin = new Thickness(0, 10, 20, 0);
 
-                    //todo: image convertion here.
-                    // foreach (byte b in entry.Receipt)
-                    {
-                        //       Debug.WriteLine("byte found: " + b);
-                    }
-
-
-                    Debug.WriteLine(entry.Receipt);
                     if (entry.Receipt != null)
                     {
-                        Debug.WriteLine("--------------------");
-                        //Debug.WriteLine(await ImageFromBytes(entry.Receipt));
-
-                        Debug.WriteLine(entry.Receipt.ToString());
-                        Debug.WriteLine("--------------------");
-
                         //note: het verhaal over het opslaan van images laten we even.
-                       // Image img = new Image();
-                       //GROTE RIK TODO:
-                       //etry.Receipt bevat de image path, zorg dat deze in een image komt
-                       //entry.Receipt
+                       Image img = new Image();
+                        //GROTE RIK TODO:
+                        //etry.Receipt bevat de image path, zorg dat deze in een image komt
+                        //entry.Receipt
                         //File.WriteAllBytes("receipt.jpg", entry.Receipt);
-                 //       img.Source = new BitmapImage(new Uri("ms-appx:///Assets/testBonnetje" + i + ".jpg"));
-                      //  img.Source = await ImageFromBytes(entry.Receipt);
+                        //       img.Source = new BitmapImage(new Uri("ms-appx:///Assets/testBonnetje" + i + ".jpg"));
+                        //  img.Source = await ImageFromBytes(entry.Receipt);
+                        img.Source = new BitmapImage(new Uri(entry.Receipt, UriKind.Absolute));
                         img.Height = panelEntry.Height - 20;
                         
                         panelEntry.Children.Add(img);
