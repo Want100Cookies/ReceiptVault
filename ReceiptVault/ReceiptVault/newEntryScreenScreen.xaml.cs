@@ -111,7 +111,7 @@ namespace ReceiptVault
                 return;
             }
 
-            if (textBoxVAT.Text.Trim().Equals(""))
+            if (textBoxVAT.Text.Trim().Equals("") || Int32.Parse(textBoxVAT.Text) < 100)
             {
                 var dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. het btw bedrag goed in.");
                 await dialogError.ShowAsync();
@@ -122,8 +122,6 @@ namespace ReceiptVault
             DateTimeOffset date = (DateTimeOffset)picker.Date;
             DateTime dt = date.DateTime;
             
-            //note: picture encoding here.
-
             // Executing: insert into "Entry"("StoreName", "Total", "VATpercentage", "Date", "Receipt") values(?,?,?,?,?)
 
             try
@@ -175,26 +173,12 @@ namespace ReceiptVault
             }
 
             //image saven:
-            //Debug.WriteLine("image proberen te saven in " + ApplicationData.Current.LocalFolder);
-            //note: dit gaan linken met iets in de db.
-            var x = await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
-            Debug.WriteLine("De imagepath is: " + x.Path.ToString());
+            var storageFile = await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
+            Debug.WriteLine("De imagepath is: " + storageFile.Path.ToString());
             this.photo = photo;
             //  Debug.WriteLine("image saved");
 
-            receipt = x.Path;
-
-            //  IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
-            //BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-            //SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-
-            //SoftwareBitmap softwareBitmapBGR8 = SoftwareBitmap.Convert(softwareBitmap,
-            //    BitmapPixelFormat.Bgra8,
-            //    BitmapAlphaMode.Premultiplied);
-
-            //SoftwareBitmapSource bitmapSource = new SoftwareBitmapSource();
-            //await bitmapSource.SetBitmapAsync(softwareBitmapBGR8);
-           // imgNewReceipt.Source = bitmapSource;
+            receipt = storageFile.Path;
 
             imgNewReceipt.Source = await ImageFromBytes(await ReadFile(photo));
 

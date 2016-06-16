@@ -84,14 +84,8 @@ namespace ReceiptVault
 
                     if (entry.Receipt != null)
                     {
-                        //note: het verhaal over het opslaan van images laten we even.
-                       Image img = new Image();
-                        //GROTE RIK TODO:
-                        //etry.Receipt bevat de image path, zorg dat deze in een image komt
-                        //entry.Receipt
-                        //File.WriteAllBytes("receipt.jpg", entry.Receipt);
-                        //       img.Source = new BitmapImage(new Uri("ms-appx:///Assets/testBonnetje" + i + ".jpg"));
-                        //  img.Source = await ImageFromBytes(entry.Receipt);
+                        Image img = new Image();
+                       
                         img.Source = new BitmapImage(new Uri(entry.Receipt, UriKind.Absolute));
                         img.Height = panelEntry.Height - 20;
                         
@@ -102,14 +96,16 @@ namespace ReceiptVault
                     StackPanel stackText = new StackPanel();
                     stackText.Orientation = Orientation.Horizontal;
                     stackText.Width = panelEntry.Width;
+                    
+                    TextBlock txtAmount = new TextBlock();
+                    txtAmount.Text = entry.Total.ToString("'€'########.00");
 
                     TextBlock txtStore = new TextBlock();
                     txtStore.Text = entry.StoreName;
-                    txtStore.Width = panelEntry.Width - 55;
+                    txtStore.Width = panelEntry.Width - 55 - txtAmount.Text.Length;
+                    Debug.WriteLine("De textlength van textstore is: " + txtStore.Text.Length);
                 //    txtStore.Margin = new Thickness(0, 0, 100, 0);
 
-                    TextBlock txtAmount = new TextBlock();
-                    txtAmount.Text = entry.Total.ToString("'€'########.00");
                 //    txtAmount.Margin = new Thickness(100, 0, 0, 0);
 
                     //finally: add to the panel.
