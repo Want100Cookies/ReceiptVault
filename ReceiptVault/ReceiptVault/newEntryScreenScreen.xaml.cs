@@ -1,33 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
-using Windows.Devices.Input;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Imaging;
 using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.System.Profile;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
-using WinRTXamlToolkit.Imaging;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -38,18 +23,24 @@ namespace ReceiptVault
     /// </summary>
     public sealed partial class newEntryScreen : Page
     {
-        private int[] dragStartPos;
-        private int[] dragFinishPos;
-        private EntryStore.Entry entry;
+        private readonly int[] dragStartPos;
+        private readonly int[] dragFinishPos;
 
+        //field die bijhoud of er een nieuwe entry is toegevoegd aan de database, op het moment dat er dan 
+        //genavigeerd wordt kan er dan een argument worden meegegeven die zorgt dat de homescreen wordt geupdated.
+        private bool isNewEntryAdded;
+
+        //note:
+        //het private field EntryStore.Entry entry hoeft niet als field gedefinieerd te worden, deze wordt dus lokaal gebruikt nu.
+        
         //note: deze staat niet in de class diagram, maar is wel nodig:
-        private Boolean dragging;
+        //is op dit moment de gebruiker aan het draggen? zo ja, pas het rode rechthoekje dan aan.
+        private bool dragging;
         private StorageFile photo;
 
-        //i'll go to ... for this.
         private string receipt;
 
-        //field to edit the value of textBoxTotal.
+        //field to edit the value of textBoxTotal, heeft de ImageScan.
         public string total
         {
             get { return textBoxTotal.Text; }
@@ -59,7 +50,9 @@ namespace ReceiptVault
         public newEntryScreen()
         {
             this.InitializeComponent();
-            Debug.WriteLine("Het werkt");
+
+            //note: dit is nodig, anders blijf isNewEntryAdded null.
+            isNewEntryAdded = false;
 
             //note: dragStartPos = dragFinishPos = new int[2]; is nooit een goed idee geweest.
             dragStartPos = new int[2];
@@ -68,8 +61,6 @@ namespace ReceiptVault
             picker.Date = DateTime.Now;
 
             System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("nl-NL");
-
-
         }
 
         /// <summary>
@@ -93,40 +84,58 @@ namespace ReceiptVault
         }
 
         /// <summary>
-        /// Methode die wordt aangeroepen wanneer er op de accept button wordt geklikt, hierin wordt 
+        /// Methode die wordt aangeroepen wanneer er op de accept button wordt geklikt, tevens wordt hierin ook alle input afgehandeld.
         /// </summary>
         public async void acceptEntry()
         {
+            //alle input handling gebeurt hier
+            MessageDialog dialogError = null;
+
             if (textBoxTotal.Text.Trim().Equals(""))
             {
-                var dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. het totaal goed in.");
-                await dialogError.ShowAsync();
-                return;
+                dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. het totaal goed in.");
             }
 
             if (textBoxShopName.Text.Trim().Equals(""))
             {
-                var dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. de winkel naam goed in.");
-                await dialogError.ShowAsync();
-                return;
+                dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. de winkel naam goed in.");
             }
 
-            if (textBoxVAT.Text.Trim().Equals("") || Int32.Parse(textBoxVAT.Text) < 100)
+            if (textBoxVAT.Text.Trim().Equals("") || int.Parse(textBoxVAT.Text) > 99)
             {
-                var dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. het btw bedrag goed in.");
+                dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. het btw bedrag goed in.");
+            }
+
+            //dt is verplicht tot initialisatie.
+            DateTime dt = DateTime.Now;
+            if (picker.Date == null)
+            {
+                dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. het btw bedrag goed in.");
+            }
+            else
+            {
+                DateTimeOffset date = (DateTimeOffset) picker.Date;
+                dt = date.DateTime;
+
+                //er wordt een bonnetje uit de toekomst aangemaakt.
+                if (dt.CompareTo(DateTime.Now) > 0)
+                {
+                    dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. geen tijd in de toekomst in.");
+                }
+            }
+
+            //is het nodig om een error terug te geven aan de gebruiker?
+            if (dialogError != null)
+            {
                 await dialogError.ShowAsync();
                 return;
-            }
-            
-            // DateTime dt = Convert.ToDateTime(picker.Date);
-            DateTimeOffset date = (DateTimeOffset)picker.Date;
-            DateTime dt = date.DateTime;
+            }  
             
             // Executing: insert into "Entry"("StoreName", "Total", "VATpercentage", "Date", "Receipt") values(?,?,?,?,?)
 
             try
             {
-                entry = new EntryStore.Entry
+                EntryStore.Entry entry = new EntryStore.Entry
                 {
                     StoreName = textBoxShopName.Text.Trim(),
                     Total = double.Parse(textBoxTotal.Text),
@@ -135,21 +144,17 @@ namespace ReceiptVault
                     Receipt = receipt
                 };
 
-                Debug.WriteLine(entry.StoreName);
                 EntryStore.Instance.SaveEntry(entry);
+                isNewEntryAdded = true;
             }
             catch (Exception)
             {
+                //er ging wat echt met iets als het parsen.
                 var error = new MessageDialog("Er is wat mis gegaan met het opslaan van de gegevens, zijn alle invoer velden correct ingevuld?");
                 await error.ShowAsync();
                 return;
             }
    
-            foreach (EntryStore.Entry enry in EntryStore.Instance.RetrieveEntry())
-            {
-                Debug.WriteLine(enry.Id);
-            }
-
             var dialog = new MessageDialog("Het nieuwe bonnetje is succesvol opgeslagen.");
             await dialog.ShowAsync();
         }
@@ -291,7 +296,7 @@ namespace ReceiptVault
 
         private void homeClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(MainPage));
+            this.Frame.Navigate(typeof(MainPage), isNewEntryAdded.ToString());
         }
 
         /// <summary>
@@ -328,11 +333,8 @@ namespace ReceiptVault
         }
 
         //stukje autosuggest voor de winkels:
-        private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        private void AutoSuggestBoxStoreName_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            // Only get results when it was a user typing, 
-            // otherwise assume the value got filled in by TextMemberPath 
-            // or the handler for SuggestionChosen.
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
                 ObservableCollection<string> filteredStores = new ObservableCollection<string>();
@@ -359,9 +361,39 @@ namespace ReceiptVault
                 }
 
                 sender.ItemsSource = filteredStores;
-
-                //sender.ItemsSource = dataset;
             }
         }      
+
+        //stukje autosuggest voor het btw bedrag:
+        private void AutoSuggestBoxVAT_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                ObservableCollection<int> filteredVatPercentages = new ObservableCollection<int>();
+
+                //Set the ItemsSource to be your filtered dataset
+                int[] vatPercentages = EntryStore.Instance.getAllVatPercentages(); //return original data from Store
+
+                if (!string.IsNullOrEmpty(sender.Text))
+                {
+                    foreach (int vatPercentage in vatPercentages)
+                    {
+                        if (vatPercentage.ToString().Contains(sender.Text))
+                        {
+                            filteredVatPercentages.Add(vatPercentage);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (int vatPercentage in EntryStore.Instance.getAllVatPercentages())
+                    {
+                        filteredVatPercentages.Add(vatPercentage);
+                    }
+                }
+
+                sender.ItemsSource = filteredVatPercentages;
+            }
+        }
     }
 }

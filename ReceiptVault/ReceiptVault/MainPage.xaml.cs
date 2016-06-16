@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using WinRTXamlToolkit.Controls;
-using Panel = Windows.Devices.Enumeration.Panel;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -33,96 +26,78 @@ namespace ReceiptVault
         {
             this.InitializeComponent();
 
+            //note: wie kwam op dit idee?
             entries = new List<EntryStore.Entry>();
 
-            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
-            {
-                entries.Add(entry);
-                Debug.WriteLine("Entry found! " + entry.Id);
-            }
+            NavigationCacheMode = NavigationCacheMode.Enabled;
 
-            updateEntries();
+           // updateEntries();
         }
 
         /// <summary>
         /// Updates all the entries on the screen, syncing the data of the database with the entries on the screen.
-        /// NOTE: dit werkt, maar de uitlijning is minder. TODO
         /// </summary>
-        public async void updateEntries()
+        public void updateEntries()
         {
-            Debug.WriteLine("isChanged() is " + isChanged());
-            if (isChanged())
+            Debug.WriteLine("Entries worden geupdated omdat de update functie is aangeroepen.");
+            //eerst entries op null zetten, wordt de garbage collector vrolijk van.
+            entries = null;
+            entries = new List<EntryStore.Entry>();
+
+            panelReceipts.Children.Clear();
+
+            //entries
+            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
             {
-                //eerst entries op null zetten, wordt de garbage collector vrolijk van.
-                entries = null;
-                entries = new List<EntryStore.Entry>();
+                entries.Add(entry);
+                //Debug.WriteLine("Entry found! " + entry.Id);
+                StackPanel panelEntry = new StackPanel();
 
-                panelReceipts.Children.Clear();
+                panelEntry.BorderThickness = new Thickness(1);
+                // panelEntry.Background = new SolidColorBrush(Colors.Chocolate);
 
-             //   panelReceipts.Padding = new Thickness(20, 10, 0, 0);
+                panelEntry.BorderBrush = new SolidColorBrush(Colors.Black);
 
+                panelEntry.Width = 250;
+                panelEntry.Height = 200;
 
-                int i = 1;
-                //entries
-                foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
+                panelEntry.Padding = new Thickness(3, 1, 3, 1);
+
+                panelEntry.Margin = new Thickness(0, 10, 20, 0);
+
+                if (entry.Receipt != null)
                 {
-                    entries.Add(entry);
-                    //Debug.WriteLine("Entry found! " + entry.Id);
-                    StackPanel panelEntry = new StackPanel();
-
-                    panelEntry.BorderThickness = new Thickness(1);
-                   // panelEntry.Background = new SolidColorBrush(Colors.Chocolate);
-
-                    panelEntry.BorderBrush = new SolidColorBrush(Colors.Black);
-
-                    panelEntry.Width = 250;
-                    panelEntry.Height = 200;
-
-                    panelEntry.Padding = new Thickness(3, 1, 3, 1);
-
-                    panelEntry.Margin = new Thickness(0, 10, 20, 0);
-
-                    if (entry.Receipt != null)
-                    {
-                        Image img = new Image();
+                    Image img = new Image();
                        
-                        img.Source = new BitmapImage(new Uri(entry.Receipt, UriKind.Absolute));
-                        img.Height = panelEntry.Height - 20;
+                    img.Source = new BitmapImage(new Uri(entry.Receipt, UriKind.Absolute));
+                    img.Height = panelEntry.Height - 20;
                         
-                        panelEntry.Children.Add(img);
-                    }
-
-                    //storeName:
-                    StackPanel stackText = new StackPanel();
-                    stackText.Orientation = Orientation.Horizontal;
-                    stackText.Width = panelEntry.Width;
-                    
-                    TextBlock txtAmount = new TextBlock();
-                    txtAmount.Text = entry.Total.ToString("'€'########.00");
-
-                    TextBlock txtStore = new TextBlock();
-                    txtStore.Text = entry.StoreName;
-                    txtStore.Width = panelEntry.Width - 55 - txtAmount.Text.Length;
-                    Debug.WriteLine("De textlength van textstore is: " + txtStore.Text.Length);
-                //    txtStore.Margin = new Thickness(0, 0, 100, 0);
-
-                //    txtAmount.Margin = new Thickness(100, 0, 0, 0);
-
-                    //finally: add to the panel.
-                    stackText.Children.Add(txtStore);
-                    stackText.Children.Add(txtAmount);
-
-                    panelEntry.Children.Add(stackText);
-
-                    panelReceipts.Children.Add(panelEntry);
-
-                    i++;
-                    if (i == 7)
-                    {
-                        i = 1;
-                    }
+                    panelEntry.Children.Add(img);
                 }
+
+                //storeName:
+                StackPanel stackText = new StackPanel();
+                stackText.Orientation = Orientation.Horizontal;
+                stackText.Width = panelEntry.Width;
+                    
+                TextBlock txtAmount = new TextBlock();
+                txtAmount.Text = entry.Total.ToString("'€'########.00");
+
+                TextBlock txtStore = new TextBlock();
+                txtStore.Text = entry.StoreName;
+
+                //uitlijning
+                txtStore.Width = panelEntry.Width - 55 - txtAmount.Text.Length;
+
+                //finally: add to the panel.
+                stackText.Children.Add(txtStore);
+                stackText.Children.Add(txtAmount);
+
+                panelEntry.Children.Add(stackText);
+
+                panelReceipts.Children.Add(panelEntry);
             }
+            
        }
 
         /// <summary>
@@ -135,7 +110,7 @@ namespace ReceiptVault
             //op het moment dat er meer of minder entries in de db zitten, moet er per definitie een sync plaatsvinden.
             if (EntryStore.Instance.RetrieveEntry().Length != entries.Count)
             {
-                return false;
+                return true;
             }
 
             //note: op dit punt in de code weten we 100% zeker dat beide data sources (scherm en slLite database) dezelfde grootte hebben.
@@ -145,22 +120,22 @@ namespace ReceiptVault
             int[] idsOnScreen = new int[entries.Count];
             
             //array ids vullen met alle id's uit de database.
-            for (int i = 0; i < EntryStore.Instance.RetrieveEntry().Length; i++)
+            for (int i = 0; i < entriesInDB.Length; i++)
             {
                 EntryStore.Entry entry = entriesInDB[i];
                 idsInDB[i] = entry.Id;
-                //Debug.WriteLine("Entrystore heeft het volgende id: " + idsInDB[i]);
+                Debug.WriteLine("Entrystore heeft het volgende id: " + idsInDB[i]);
             }
 
             //array idsOnScreen vullen met alle id's van de receipts op het scherm.
             for (int i = 0; i < idsInDB.Length; i++)
             {
-                EntryStore.Entry entry = entriesInDB[i];
-                idsInDB[i] = entry.Id;
-         //       Debug.WriteLine("Plaatje op het scherm heeft het volgende id: " + idsInDB[i]);
+                EntryStore.Entry entry = entries[i];
+                idsOnScreen[i] = entry.Id;
+                Debug.WriteLine("Plaatje op het scherm heeft het volgende id: " + idsOnScreen[i]);
             }
 
-          //  Debug.WriteLine("Conclusie: zijn de 2 data sources gelijk? " + !Enumerable.SequenceEqual(idsInDB, idsOnScreen));
+            Debug.WriteLine("Conclusie: Zijn de 2 veranderd? " + !Enumerable.SequenceEqual(idsInDB, idsOnScreen));
 
             return !Enumerable.SequenceEqual(idsInDB, idsOnScreen);
         }
@@ -192,6 +167,31 @@ namespace ReceiptVault
         }
 
         /// <summary>
+        /// Event fired when navigating to this page.
+        /// </summary>
+        /// <param name="e">need to update?</param>
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            string text = e.Parameter as string;
+            Debug.WriteLine("Navigated to homepage, arguments received: " + text);
+            if (text != null)
+            {
+                Debug.WriteLine("Type: " + text.GetType());
+
+                if (text.Equals("True"))
+                {
+                    updateEntries();
+                }
+                else if (text.Equals(""))
+                {
+                    //de app wordt voor de eerste keer gestart:
+                    Debug.WriteLine("De app wordt voor de eerste keer gestart");
+                    updateEntries();
+                }
+            }
+        }
+
+        /// <summary>
         /// note: de volgende twee events zijn voor het veranderen van de mouse pointer wanneer er een hover plaatsvind over 1 van de 4 menu items.        
         /// </summary>
         /// <param name="sender"></param>
@@ -218,25 +218,5 @@ namespace ReceiptVault
             }
             return image;
         }
-
-        //public byte[] ImageToByte(Image image)
-        //{
-        //    using (MemoryStream ms = new MemoryStream())
-        //    {
-        //        // Convert Image to byte[]
-        //        image.Save(ms, format);
-        //        byte[] imageBytes = ms.ToArray();
-        //        return imageBytes;
-        //    }
-        //}
-        ////public Image Base64ToImage(string base64String)
-        //public Image ByteToImage(byte[] imageBytes)
-        //{
-        //    // Convert byte[] to Image
-        //    MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
-        //    ms.Write(imageBytes, 0, imageBytes.Length);
-        //    Image image = new Bitmap(ms);
-        //    return image;
-        //}
     }
 }

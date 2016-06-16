@@ -148,8 +148,21 @@ namespace ReceiptVault
             {
                 db.TraceListener = new DebugTraceListener();
 
-                //note: deze werkt niet!
                 return db.Table<Entry>().Select(s => s.StoreName).Distinct().ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Returnt alle vat percentages die zijn ingevuld door een gebruiker.
+        /// </summary>
+        /// <returns></returns>
+        public int[] getAllVatPercentages()
+        {
+            using (var db = DbConnection)
+            {
+                db.TraceListener = new DebugTraceListener();
+
+                return db.Table<Entry>().Select(s => s.VATpercentage).Distinct().ToArray();
             }
         }
 

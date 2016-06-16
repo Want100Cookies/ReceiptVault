@@ -54,7 +54,7 @@ namespace ReceiptVault
                 {
                     //nee: maak een nieuwe list aan.
                     chartDictionary.Add(entry.StoreName, new List<EntryStore.Entry>());
-                    Debug.WriteLine("Er is een nieuwe key aangemaakt, " + entry.StoreName);
+                    //Debug.WriteLine("Er is een nieuwe key aangemaakt, " + entry.StoreName);
                 }
 
                 chartDictionary[entry.StoreName].Add(entry);
@@ -174,15 +174,15 @@ namespace ReceiptVault
                 }
                 
                 EntryStore.Entry[] entries = EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime);
-                foreach (EntryStore.Entry entry in entries)
-                {
-                    Debug.WriteLine("-------Entry----------");
-                    Debug.WriteLine(entry.Id);
-                    Debug.WriteLine(entry.Date.ToString());
-                    Debug.WriteLine(entry.StoreName);
-                    Debug.WriteLine(entry.Total);
-                    Debug.WriteLine("-------/entry----------");
-                }
+                //foreach (EntryStore.Entry entry in entries)
+                //{
+                //    Debug.WriteLine("-------Entry----------");
+                //    Debug.WriteLine(entry.Id);
+                //    Debug.WriteLine(entry.Date.ToString());
+                //    Debug.WriteLine(entry.StoreName);
+                //    Debug.WriteLine(entry.Total);
+                //    Debug.WriteLine("-------/entry----------");
+                //}
 
                 string[] storeNames = new string[listBoxStores.Items.Count];
                 int i = 0;
@@ -285,7 +285,7 @@ namespace ReceiptVault
 
         private void homeClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(MainPage));
+            this.Frame.Navigate(typeof(MainPage), "False");
         }
 
         /// <summary>

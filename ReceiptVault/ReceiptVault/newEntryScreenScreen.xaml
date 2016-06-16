@@ -46,7 +46,9 @@
 
         <TextBlock x:Name="textBlock_Copy" HorizontalAlignment="Left" Margin="637,446,0,0" TextWrapping="Wrap" Text="Winkel naam" VerticalAlignment="Top"/>
         <TextBlock x:Name="textBlock_Copy1" HorizontalAlignment="Left" Margin="637,487,0,0" TextWrapping="Wrap" Text="Datum" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBoxVAT" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="732,526,0,0" Width="265" PlaceholderText="-" MaxLength="3"/>
+        <AutoSuggestBox x:Name="textBoxVAT" PlaceholderText="Vul een btw bedrag in" QueryIcon="Find"
+                TextChanged="AutoSuggestBoxVAT_TextChanged"
+                Margin="732,526,1177,0"/>
         <TextBlock x:Name="textBlock_Copy2" HorizontalAlignment="Left" Margin="637,531,0,0" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top"/>
         <Button x:Name="buttonAccept" Content="Accepteren" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="897,563,0,0" Height="32" Width="100" Click="buttonAccept_Click"/>
 
@@ -65,7 +67,7 @@
         </Image>
 
         <AutoSuggestBox x:Name="textBoxShopName" PlaceholderText="Zoeken" QueryIcon="Find"
-                TextChanged="AutoSuggestBox_TextChanged"
+                TextChanged="AutoSuggestBoxStoreName_TextChanged"
                 Margin="732,441,1177,0"/>
        
     </Grid>
