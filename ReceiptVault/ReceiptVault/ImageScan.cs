@@ -48,13 +48,7 @@ namespace ReceiptVault
 
             this.position = position;
             //Debug.WriteLine("position size: " + position.Length);
-            //engine = new OcrEngine()
-
-            foreach (var lang in Windows.Media.Ocr.OcrEngine.AvailableRecognizerLanguages)
-            {
-                //Debug.WriteLine(lang.DisplayName.ToString());
-            }
-
+            
             Debug.WriteLine("position content:");
             for (int i = 0; i < 2; i++)
             {
@@ -70,7 +64,7 @@ namespace ReceiptVault
 
         public async void recognize(int[,] position, StorageFile file)
         {
-            var ocrEngine = OcrEngine.TryCreateFromLanguage(new Windows.Globalization.Language("en"));
+            var ocrEngine = OcrEngine.TryCreateFromLanguage(new Windows.Globalization.Language("nl"));
 
             //note: testen van ocr, please delete.
             //var f = await Package.Current.InstalledLocation.GetFileAsync(@"Assets\testBonnetje.bmp");
@@ -135,8 +129,7 @@ namespace ReceiptVault
                         ExifOrientationMode.IgnoreExifOrientation,
                         ColorManagementMode.ColorManageToSRgb);
                     receipt = pix.DetachPixelData();
-                //    form.receipt = receipt;
-                         }
+                }
                 catch (Exception e)
                 {
                     Debug.WriteLine(e);

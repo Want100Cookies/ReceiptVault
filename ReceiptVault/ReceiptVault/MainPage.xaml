@@ -8,7 +8,7 @@
     xmlns:controls="using:WinRTXamlToolkit.Controls"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10,0,-1061,-53">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10,0,0,-53">
         <RelativePanel HorizontalAlignment="Left" Width="248" Margin="-7,0,0,0">
             <RelativePanel.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -26,7 +26,7 @@
             <Image x:Name="image_Copy2" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="28" Source="Assets/graph.png" Margin="10,113,0,-103"/>
         </RelativePanel>
         <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Home" VerticalAlignment="Top" Margin="324,10,0,0" FontSize="48"/>
-        <ScrollViewer Margin="209,127,0,0" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Margin="209,127,0,76" VerticalScrollBarVisibility="Auto">
             <controls:WrapPanel x:Name="panelReceipts" Margin="142,10,10,10" Width="Auto" HorizontalAlignment="Left">
                 <TextBlock Text="Here is the news that should wrap around." TextWrapping="Wrap"/>
             </controls:WrapPanel>

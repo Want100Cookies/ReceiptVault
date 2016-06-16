@@ -104,7 +104,6 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="navigator.cs" />
     <Compile Include="newEntryScreenScreen.xaml.cs">
       <DependentUpon>newEntryScreenScreen.xaml</DependentUpon>
     </Compile>

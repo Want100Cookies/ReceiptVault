@@ -32,11 +32,10 @@
         <ComboBox x:Name="comboBoxWeek" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="631,732,0,0" Height="38" SelectionChanged="ComboBoxWeek_OnSelectionChanged"/>
         <ComboBox x:Name="comboBoxMonth" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="833,732,0,0" Height="38" SelectionChanged="ComboBoxWeek_OnSelectionChanged"/>
         <ComboBox x:Name="comboBoxYear" HorizontalAlignment="Left" Width="188" Margin="1036,732,0,0" Height="38" SelectionChanged="ComboBoxWeek_OnSelectionChanged"/>
-
-
+     
         <charting:Chart x:Name="spendingChart" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,155,271,0" Width="948" Height="547">
-            <charting:ColumnSeries x:Name="spendings" Title="Uitgaves in euro" Margin="0" IndependentValuePath="Date" DependentValuePath="Total" IsSelectionEnabled="true"/>
         </charting:Chart>
+        
 
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="552,749,0,0" TextWrapping="Wrap" Text="Filteren op:" VerticalAlignment="Top"/>
         <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="631,707,0,0" TextWrapping="Wrap" Text="Week" VerticalAlignment="Top" RenderTransformOrigin="0.279,0.483"/>

@@ -166,7 +166,7 @@ namespace ReceiptVault
 
             public DateTime Date { get; set; }
 
-            public byte[] Receipt { get; set; }
+            public string Receipt { get; set; }
         }
     }
 }

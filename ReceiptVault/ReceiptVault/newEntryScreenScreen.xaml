@@ -66,6 +66,6 @@
 
         <AutoSuggestBox x:Name="textBoxShopName" PlaceholderText="Zoeken" QueryIcon="Find"
                 TextChanged="AutoSuggestBox_TextChanged"
-                Margin="732,441,1259,0"/>
+                Margin="732,441,1177,0"/>
     </Grid>
 </Page>

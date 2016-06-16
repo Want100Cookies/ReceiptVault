@@ -93,15 +93,19 @@ namespace ReceiptVault
                     if (entry.Receipt != null)
                     {
                         Debug.WriteLine("--------------------");
-                      //  Debug.WriteLine(await ImageFromBytes(entry.Receipt));
+                        //Debug.WriteLine(await ImageFromBytes(entry.Receipt));
 
                         Debug.WriteLine(entry.Receipt.ToString());
                         Debug.WriteLine("--------------------");
 
                         //note: het verhaal over het opslaan van images laten we even.
-                        Image img = new Image();
+                       // Image img = new Image();
+                       //GROTE RIK TODO:
+                       //etry.Receipt bevat de image path, zorg dat deze in een image komt
+                       //entry.Receipt
                         //File.WriteAllBytes("receipt.jpg", entry.Receipt);
-                        img.Source = new BitmapImage(new Uri("ms-appx:///Assets/testBonnetje" + i + ".jpg"));
+                 //       img.Source = new BitmapImage(new Uri("ms-appx:///Assets/testBonnetje" + i + ".jpg"));
+                      //  img.Source = await ImageFromBytes(entry.Receipt);
                         img.Height = panelEntry.Height - 20;
                         
                         panelEntry.Children.Add(img);
@@ -140,7 +144,7 @@ namespace ReceiptVault
 
         /// <summary>
         /// Is de lijst veranderd?
-        /// TODO: DEZE WERKT NIET (helemaal). TODO
+        /// note: TODO: DEZE WERKT NIET (helemaal). TODO
         /// </summary>
         /// <returns></returns>
         private Boolean isChanged()
@@ -218,6 +222,18 @@ namespace ReceiptVault
         private void TextBlockHome_OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
+        }
+
+        public async static Task<BitmapImage> ImageFromBytes(Byte[] bytes)
+        {
+            BitmapImage image = new BitmapImage();
+            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+            {
+                await stream.WriteAsync(bytes.AsBuffer());
+                stream.Seek(0);
+                await image.SetSourceAsync(stream);
+            }
+            return image;
         }
 
         //public byte[] ImageToByte(Image image)

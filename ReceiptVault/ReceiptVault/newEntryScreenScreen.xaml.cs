@@ -27,6 +27,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using WinRTXamlToolkit.Imaging;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -46,7 +47,7 @@ namespace ReceiptVault
         private StorageFile photo;
 
         //i'll go to ... for this.
-        public byte[] receipt;
+        private string receipt;
 
         //field to edit the value of textBoxTotal.
         public string total
@@ -116,13 +117,11 @@ namespace ReceiptVault
                 await dialogError.ShowAsync();
                 return;
             }
-
-
+            
             // DateTime dt = Convert.ToDateTime(picker.Date);
             DateTimeOffset date = (DateTimeOffset)picker.Date;
-            DateTime dt = DateTime.Parse(date.DateTime.ToString(), CultureInfo.CurrentCulture);
+            DateTime dt = date.DateTime;
             
-
             //note: picture encoding here.
 
             // Executing: insert into "Entry"("StoreName", "Total", "VATpercentage", "Date", "Receipt") values(?,?,?,?,?)
@@ -178,25 +177,26 @@ namespace ReceiptVault
             //image saven:
             //Debug.WriteLine("image proberen te saven in " + ApplicationData.Current.LocalFolder);
             //note: dit gaan linken met iets in de db.
-            await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
+            var x = await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
+            Debug.WriteLine("De imagepath is: " + x.Path.ToString());
             this.photo = photo;
             //  Debug.WriteLine("image saved");
 
-            receipt = await ReadFile(photo);
+            receipt = x.Path;
 
-              IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
-            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-            SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+            //  IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
+            //BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+            //SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-            SoftwareBitmap softwareBitmapBGR8 = SoftwareBitmap.Convert(softwareBitmap,
-                BitmapPixelFormat.Bgra8,
-                BitmapAlphaMode.Premultiplied);
+            //SoftwareBitmap softwareBitmapBGR8 = SoftwareBitmap.Convert(softwareBitmap,
+            //    BitmapPixelFormat.Bgra8,
+            //    BitmapAlphaMode.Premultiplied);
 
-            SoftwareBitmapSource bitmapSource = new SoftwareBitmapSource();
-            await bitmapSource.SetBitmapAsync(softwareBitmapBGR8);
+            //SoftwareBitmapSource bitmapSource = new SoftwareBitmapSource();
+            //await bitmapSource.SetBitmapAsync(softwareBitmapBGR8);
            // imgNewReceipt.Source = bitmapSource;
 
-            imgNewReceipt.Source = await ImageFromBytes(receipt);
+            imgNewReceipt.Source = await ImageFromBytes(await ReadFile(photo));
 
             imgArrowFoto.Visibility = Visibility.Collapsed;
             imgArrowToPicture.Visibility = Visibility.Visible;

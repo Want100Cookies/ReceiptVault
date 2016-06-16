@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -42,18 +43,43 @@ namespace ReceiptVault
         /// </summary>
         private void populateGraph(DateTime beginDateTime, DateTime endDateTime, string[] storeNames)
         {
-            List<EntryStore.Entry> chartData = new List<EntryStore.Entry>();
+            Dictionary<String, List<EntryStore.Entry>> chartDictionary = new Dictionary<string, List<EntryStore.Entry>>();
 
             foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime, storeNames))
             {
-                
                 //this looks very weird. Deze regel haalt de tijd weg bij de dateTime, op deze manier staat worden de uitgaven per dag op geteld (en niet per dag + tijdstip).
                 entry.Date = entry.Date.Date;
-                                chartData.Add(entry);
+
+                if (!chartDictionary.ContainsKey(entry.StoreName))
+                {
+                    //nee: maak een nieuwe list aan.
+                    chartDictionary.Add(entry.StoreName, new List<EntryStore.Entry>());
+                    Debug.WriteLine("Er is een nieuwe key aangemaakt, " + entry.StoreName);
+                }
+
+                chartDictionary[entry.StoreName].Add(entry);
+        
             }
 
-            (spendingChart.Series[0] as ColumnSeries).ItemsSource = chartData;
-            
+            spendingChart.Series.Clear();    
+
+            int i = 0;
+            foreach (List<EntryStore.Entry> entries in chartDictionary.Values)
+            {
+                Debug.WriteLine(spendingChart.Series.Count);
+
+                spendingChart.Series.Insert(i, new ColumnSeries());
+                (spendingChart.Series[i] as ColumnSeries).DependentValuePath = "Total";
+                (spendingChart.Series[i] as ColumnSeries).IndependentValuePath = "Date";
+
+                //todo: elke chart series een vaste kleur: geel/oranje de kleur voor de jumbo... etc.
+
+                (spendingChart.Series[i] as ColumnSeries).Title = entries[0].StoreName;
+
+                (spendingChart.Series[i] as ColumnSeries).ItemsSource = entries;
+                i++;
+            }
+
         }
 
         /// <summary>
