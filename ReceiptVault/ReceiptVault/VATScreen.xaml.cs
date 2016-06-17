@@ -15,38 +15,54 @@ namespace ReceiptVault
 {
     public sealed partial class VATScreen : Page
     {
+        private bool initialized = false;
+
+
         public VATScreen()
         {
             this.InitializeComponent();
             startPicker.Date = DateTime.Now.AddDays(-30);
             endPicker.Date = DateTime.Now;
             filterStoreName();
+            initialized = true;
+            filterDate();
+
         }
 
         public void filterDate()
         {
-            string[] storeNames = new string[listBoxStores.Items.Count];
-            int i = 0;
-            if (listBoxStores.Items != null)
+            if (initialized)
             {
-                foreach (CheckBox checkBox in listBoxStores.Items)
+                string[] storeNames = new string[listBoxStores.Items.Count];
+                int i = 0;
+                if (listBoxStores.Items != null)
                 {
-                    if (checkBox.IsChecked != null && checkBox.IsChecked.Value)
+                    foreach (CheckBox checkBox in listBoxStores.Items)
                     {
-                        Debug.WriteLine(checkBox.Content);
-                        storeNames[i] = checkBox.Content.ToString();
-                        i++;
+                        if (checkBox.IsChecked != null && checkBox.IsChecked.Value)
+                        {
+                            Debug.WriteLine(checkBox.Content);
+                            storeNames[i] = checkBox.Content.ToString();
+                            i++;
+                        }
+                    }
+
+                    //er is geen enkele winkel aangevinkt: alle data laten zien.
+                    if (i == 0)
+                    {
+                        storeNames = EntryStore.Instance.getAllStoreNames();
                     }
                 }
+
+                DateTimeOffset date = (DateTimeOffset) startPicker.Date;
+                DateTime startDateTime = date.DateTime;
+
+                DateTimeOffset date2 = (DateTimeOffset) endPicker.Date;
+                DateTime endDateTime = date2.DateTime;
+
+
+                populateGraph(startDateTime, endDateTime, storeNames);
             }
-
-            DateTimeOffset date = (DateTimeOffset)startPicker.Date;
-            DateTime startDateTime = date.DateTime;
-
-            DateTimeOffset date2 = (DateTimeOffset)startPicker.Date;
-            DateTime endDateTime = date.DateTime;
-
-            populateGraph(startDateTime, endDateTime, storeNames);
         }
 
         /// <summary>
@@ -99,8 +115,11 @@ namespace ReceiptVault
         {
             List<EntryStore.Entry> chartData = new List<EntryStore.Entry>();
 
-            // foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime, storeNames))
-            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
+            Debug.WriteLine("Begindatum: " + beginDateTime);
+            Debug.WriteLine("EindDatum: " + endDateTime);
+
+
+            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime, storeNames))
             {
                 //this looks very weird. Deze regel haalt de tijd weg bij de dateTime, op deze manier staat worden de uitgaven per dag op geteld (en niet per dag + tijdstip).
                 entry.Date = entry.Date.Date;
