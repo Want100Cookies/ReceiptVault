@@ -26,7 +26,6 @@ namespace ReceiptVault
             filterStoreName();
             initialized = true;
             filterDate();
-
         }
 
         public void filterDate()
@@ -113,21 +112,43 @@ namespace ReceiptVault
         /// </summary>
         private void populateGraph(DateTime beginDateTime, DateTime endDateTime, string[] storeNames)
         {
-            List<EntryStore.Entry> chartData = new List<EntryStore.Entry>();
-
-            Debug.WriteLine("Begindatum: " + beginDateTime);
-            Debug.WriteLine("EindDatum: " + endDateTime);
-
+            Dictionary<String, List<EntryStore.Entry>> chartDictionary = new Dictionary<string, List<EntryStore.Entry>>();
 
             foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime, storeNames))
             {
                 //this looks very weird. Deze regel haalt de tijd weg bij de dateTime, op deze manier staat worden de uitgaven per dag op geteld (en niet per dag + tijdstip).
                 entry.Date = entry.Date.Date;
                 entry.Total = (entry.Total/100)*entry.VATpercentage;
-                chartData.Add(entry);
+
+                if (!chartDictionary.ContainsKey(entry.StoreName))
+                {
+                    //nee: maak een nieuwe list aan.
+                    chartDictionary.Add(entry.StoreName, new List<EntryStore.Entry>());
+                    //Debug.WriteLine("Er is een nieuwe key aangemaakt, " + entry.StoreName);
+                }
+
+                chartDictionary[entry.StoreName].Add(entry);
+
             }
 
-            (VATChart.Series[0] as ColumnSeries).ItemsSource = chartData;
+            VATChart.Series.Clear();
+
+            int i = 0;
+            foreach (List<EntryStore.Entry> entries in chartDictionary.Values)
+            {
+                Debug.WriteLine(VATChart.Series.Count);
+
+                VATChart.Series.Insert(i, new ColumnSeries());
+                (VATChart.Series[i] as ColumnSeries).DependentValuePath = "Total";
+                (VATChart.Series[i] as ColumnSeries).IndependentValuePath = "Date";
+
+                //todo: elke chart series een vaste kleur: geel/oranje de kleur voor de jumbo... etc.
+
+                (VATChart.Series[i] as ColumnSeries).Title = entries[0].StoreName;
+
+                (VATChart.Series[i] as ColumnSeries).ItemsSource = entries;
+                i++;
+            }
         }
 
         private void ListBoxStores_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

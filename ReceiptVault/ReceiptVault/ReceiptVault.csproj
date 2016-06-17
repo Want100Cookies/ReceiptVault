@@ -126,6 +126,7 @@
     <Content Include="Assets\file.bmp" />
     <Content Include="Assets\graph.png" />
     <Content Include="Assets\home.bmp" />
+    <Content Include="Assets\notFound.png" />
     <Content Include="Assets\spending.bmp" />
     <Content Include="Assets\splashScreen.png" />
     <Content Include="Assets\splashScreen.scale-100.png" />

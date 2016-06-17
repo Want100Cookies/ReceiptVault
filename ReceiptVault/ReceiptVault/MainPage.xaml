@@ -31,6 +31,8 @@
                 <TextBlock Text="Here is the news that should wrap around." TextWrapping="Wrap"/>
             </controls:WrapPanel>
         </ScrollViewer>
+        <Image x:Name="imageBigReceiptOverlay" HorizontalAlignment="Left" Height="374" VerticalAlignment="Top" Width="404" Margin="282,127,0,0" Tapped="ImageBigReceiptOverlay_OnTapped"/>
+        <Rectangle Name="imageClickOverlay" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1123" Stroke="Black" VerticalAlignment="Top" Width="1910" Opacity="0" Tapped="ImageClickOverlay_OnTapped" Visibility="Collapsed" PointerEntered="TextBlockHome_OnPointerEntered" PointerExited="TextBlockHome_OnPointerExited"/>
     </Grid>
 </Page>
     

@@ -65,15 +65,23 @@ namespace ReceiptVault
 
                 panelEntry.Margin = new Thickness(0, 10, 20, 0);
 
+                Image img = new Image();
+                img.Height = panelEntry.Height - 20;
                 if (entry.Receipt != null)
                 {
-                    Image img = new Image();
-                       
+                    panelEntry.Tapped += entryClicked;
+                    panelEntry.PointerEntered += TextBlockHome_OnPointerEntered;
+                    panelEntry.PointerExited += TextBlockHome_OnPointerExited;
+
                     img.Source = new BitmapImage(new Uri(entry.Receipt, UriKind.Absolute));
-                    img.Height = panelEntry.Height - 20;
-                        
-                    panelEntry.Children.Add(img);
                 }
+                else
+                {
+                    img.Source = new BitmapImage(new Uri("ms-appx:/Assets/notFound.png"));
+                }
+
+                panelEntry.Children.Add(img);
+
 
                 //storeName:
                 StackPanel stackText = new StackPanel();
@@ -143,6 +151,13 @@ namespace ReceiptVault
 
         private void entryClicked(object sender, RoutedEventArgs e)
         {
+            StackPanel stackPanel = sender as StackPanel;
+            Image img = stackPanel.Children[0] as Image;
+            ImageSource source = img.Source;
+
+            imageBigReceiptOverlay.Source = source;
+            imageBigReceiptOverlay.Visibility = Visibility.Visible;
+            imageClickOverlay.Visibility = Visibility.Visible;
 
         }
 
@@ -217,6 +232,18 @@ namespace ReceiptVault
                 await image.SetSourceAsync(stream);
             }
             return image;
+        }
+
+        private void ImageBigReceiptOverlay_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            imageBigReceiptOverlay.Visibility = Visibility.Collapsed;
+            imageClickOverlay.Visibility = Visibility.Collapsed;
+        }
+
+        private void ImageClickOverlay_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            imageBigReceiptOverlay.Visibility = Visibility.Collapsed;
+            imageClickOverlay.Visibility = Visibility.Collapsed;
         }
     }
 }

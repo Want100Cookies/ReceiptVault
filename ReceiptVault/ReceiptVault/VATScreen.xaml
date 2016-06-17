@@ -9,7 +9,7 @@
     mc:Ignorable="d"  Width="1187">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="-128,0,0,0">
-        <RelativePanel Height="1080" HorizontalAlignment="Left" Width="204">
+        <RelativePanel Height="1080" HorizontalAlignment="Right" Width="204" Margin="0,0,1111,0">
             <RelativePanel.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFDEF3FF" Offset="0.994"/>
@@ -34,18 +34,18 @@
             <Charting:ColumnSeries DependentValuePath="VATpercentage" IndependentValuePath="Date" Title="Betaalde btw in euro"></Charting:ColumnSeries>
         </Charting:Chart>
 
-        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="664,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="-0.419,0.24">
+        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="597,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="-0.419,0.24">
         	<Run Text="Van"/>
         	<LineBreak/>
         	<Run/>
         </TextBlock>
-        <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Margin="884,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
+        <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Margin="817,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
         	<Run Text="Tot"/>
         	<LineBreak/>
         	<Run/>
         </TextBlock>
-        <CalendarDatePicker x:Name="startPicker" HorizontalAlignment="Left" Margin="693,89,0,0" VerticalAlignment="Top" DateChanged="StartPicker_OnDateChanged"/>
-        <CalendarDatePicker x:Name="endPicker" HorizontalAlignment="Left" Margin="909,89,0,0" VerticalAlignment="Top" DateChanged="StartPicker_OnDateChanged"/>
+        <CalendarDatePicker x:Name="startPicker" HorizontalAlignment="Left" Margin="626,89,0,0" VerticalAlignment="Top" DateChanged="StartPicker_OnDateChanged"/>
+        <CalendarDatePicker x:Name="endPicker" HorizontalAlignment="Left" Margin="842,89,0,0" VerticalAlignment="Top" DateChanged="StartPicker_OnDateChanged"/>
         <TextBlock x:Name="textBlock2_Copy" HorizontalAlignment="Left" TextWrapping="Wrap" Text="BTW" VerticalAlignment="Top" Margin="209,10,0,0" FontSize="48"/>
         <TextBox x:Name="textBoxSearch" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="215,89,0,0" Width="249" PlaceholderText="Voer hier een winkelnaam in" TextChanged="TextBoxSearch_OnTextChanged"/>
         <ListBox x:Name="listBoxStores" HorizontalAlignment="Left" Height="651" VerticalAlignment="Top" Width="249" Margin="215,121,0,0" SelectionChanged="ListBoxStores_OnSelectionChanged"/>
