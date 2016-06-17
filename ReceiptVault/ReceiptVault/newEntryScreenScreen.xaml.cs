@@ -101,7 +101,7 @@ namespace ReceiptVault
                 dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. de winkel naam goed in.");
             }
 
-            if (textBoxVAT.Text.Trim().Equals("") || int.Parse(textBoxVAT.Text) > 99)
+            if (textBoxVAT.Text.Trim().Equals("") || int.Parse(textBoxVAT.Text) > 99 || int.Parse(textBoxVAT.Text) < 0)
             {
                 dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. het btw bedrag goed in.");
             }
