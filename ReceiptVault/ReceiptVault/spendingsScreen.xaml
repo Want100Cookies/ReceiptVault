@@ -28,7 +28,7 @@
             <Image x:Name="image_Copy2" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="28" Source="Assets/graph.png" Margin="10,113,0,-103"/>
         </RelativePanel>
         <TextBox x:Name="textBoxSearch" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="229,87,0,0" Width="253" PlaceholderText="Voer hier een winkelnaam in" TextChanged="TextBoxSearch_OnTextChanged"/>
-        <ListBox x:Name="listBoxStores" HorizontalAlignment="Left" Height="790" VerticalAlignment="Top" Width="253" Margin="229,119,0,0" SelectionChanged="ListBoxStores_OnSelectionChanged"/>
+        <ListBox x:Name="listBoxStores" HorizontalAlignment="Left" Height="651" VerticalAlignment="Top" Width="253" Margin="229,119,0,0" SelectionChanged="ListBoxStores_OnSelectionChanged"/>
         <ComboBox x:Name="comboBoxWeek" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="631,732,0,0" Height="38" SelectionChanged="ComboBoxWeek_OnSelectionChanged"/>
         <ComboBox x:Name="comboBoxMonth" HorizontalAlignment="Left" VerticalAlignment="Top" Width="188" Margin="833,732,0,0" Height="38" SelectionChanged="ComboBoxWeek_OnSelectionChanged"/>
         <ComboBox x:Name="comboBoxYear" HorizontalAlignment="Left" Width="188" Margin="1036,732,0,0" Height="38" SelectionChanged="ComboBoxWeek_OnSelectionChanged"/>
