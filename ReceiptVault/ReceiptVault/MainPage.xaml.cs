@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
@@ -14,24 +12,18 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
 namespace ReceiptVault
 {
     public sealed partial class MainPage : Page
     {
-        private List<EntryStore.Entry> entries;
+        //note: een entries field is niet nodig geweest.
 
         public MainPage()
         {
             this.InitializeComponent();
 
-            //note: wie kwam op dit idee?
-            entries = new List<EntryStore.Entry>();
-
+            //er wordt gebruikt gemaakt van page caching, er worden dus pas gegevens uit de database gehaald pas op het moment dat het echt nodig is.
             NavigationCacheMode = NavigationCacheMode.Enabled;
-
-           // updateEntries();
         }
 
         /// <summary>
@@ -40,21 +32,15 @@ namespace ReceiptVault
         public void updateEntries()
         {
             Debug.WriteLine("Entries worden geupdated omdat de update functie is aangeroepen.");
-            //eerst entries op null zetten, wordt de garbage collector vrolijk van.
-            entries = null;
-            entries = new List<EntryStore.Entry>();
 
             panelReceipts.Children.Clear();
 
             //entries
             foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry())
             {
-                entries.Add(entry);
-                //Debug.WriteLine("Entry found! " + entry.Id);
                 StackPanel panelEntry = new StackPanel();
 
                 panelEntry.BorderThickness = new Thickness(1);
-                // panelEntry.Background = new SolidColorBrush(Colors.Chocolate);
 
                 panelEntry.BorderBrush = new SolidColorBrush(Colors.Black);
 
@@ -82,12 +68,11 @@ namespace ReceiptVault
 
                 panelEntry.Children.Add(img);
 
-
                 //storeName:
                 StackPanel stackText = new StackPanel();
                 stackText.Orientation = Orientation.Horizontal;
                 stackText.Width = panelEntry.Width;
-                    
+
                 TextBlock txtAmount = new TextBlock();
                 txtAmount.Text = entry.Total.ToString("'€'########.00");
 
@@ -95,7 +80,7 @@ namespace ReceiptVault
                 txtStore.Text = entry.StoreName;
 
                 //uitlijning
-                txtStore.Width = panelEntry.Width - 55 - txtAmount.Text.Length;
+                txtStore.Width = panelEntry.Width - 55 - txtAmount.Text.Length*3;
 
                 //finally: add to the panel.
                 stackText.Children.Add(txtStore);
@@ -105,50 +90,13 @@ namespace ReceiptVault
 
                 panelReceipts.Children.Add(panelEntry);
             }
-            
-       }
-
-        /// <summary>
-        /// Is de lijst veranderd?
-        /// note: TODO: DEZE WERKT NIET (helemaal). TODO
-        /// </summary>
-        /// <returns></returns>
-        private Boolean isChanged()
-        {
-            //op het moment dat er meer of minder entries in de db zitten, moet er per definitie een sync plaatsvinden.
-            if (EntryStore.Instance.RetrieveEntry().Length != entries.Count)
-            {
-                return true;
-            }
-
-            //note: op dit punt in de code weten we 100% zeker dat beide data sources (scherm en slLite database) dezelfde grootte hebben.
-            EntryStore.Entry[] entriesInDB = EntryStore.Instance.RetrieveEntry();
-
-            int[] idsInDB = new int[entriesInDB.Length];
-            int[] idsOnScreen = new int[entries.Count];
-            
-            //array ids vullen met alle id's uit de database.
-            for (int i = 0; i < entriesInDB.Length; i++)
-            {
-                EntryStore.Entry entry = entriesInDB[i];
-                idsInDB[i] = entry.Id;
-                Debug.WriteLine("Entrystore heeft het volgende id: " + idsInDB[i]);
-            }
-
-            //array idsOnScreen vullen met alle id's van de receipts op het scherm.
-            for (int i = 0; i < idsInDB.Length; i++)
-            {
-                EntryStore.Entry entry = entries[i];
-                idsOnScreen[i] = entry.Id;
-                Debug.WriteLine("Plaatje op het scherm heeft het volgende id: " + idsOnScreen[i]);
-            }
-
-            Debug.WriteLine("Conclusie: Zijn de 2 veranderd? " + !Enumerable.SequenceEqual(idsInDB, idsOnScreen));
-
-            return !Enumerable.SequenceEqual(idsInDB, idsOnScreen);
         }
 
-
+        /// <summary>
+        /// Als er op een entry gekikt wordt, moet het bonnetje in het groot verschijnen.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void entryClicked(object sender, RoutedEventArgs e)
         {
             StackPanel stackPanel = sender as StackPanel;
@@ -158,33 +106,38 @@ namespace ReceiptVault
             imageBigReceiptOverlay.Source = source;
             imageBigReceiptOverlay.Visibility = Visibility.Visible;
             imageClickOverlay.Visibility = Visibility.Visible;
-
         }
+
+
+        #region side menu navigatie
 
         private void newRecieptClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(newEntryScreen));
+            this.Frame.Navigate(typeof (newEntryScreen));
         }
 
         private void VATClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(VATScreen));
+            this.Frame.Navigate(typeof (VATScreen));
         }
 
         private void spendingsClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(spendingsScreen));
+            this.Frame.Navigate(typeof (spendingsScreen));
         }
 
         private void homeClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(MainPage));
+            this.Frame.Navigate(typeof (MainPage));
         }
+
+        #endregion
+
 
         /// <summary>
         /// Event fired when navigating to this page.
         /// </summary>
-        /// <param name="e">need to update?</param>
+        /// <param name="e">string met True of False of er geupdated moet worden (als er een nieuwe entry is toegevoegd) of niet (elke andere situatie.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             string text = e.Parameter as string;
@@ -200,7 +153,6 @@ namespace ReceiptVault
                 else if (text.Equals(""))
                 {
                     //de app wordt voor de eerste keer gestart:
-                    Debug.WriteLine("De app wordt voor de eerste keer gestart");
                     updateEntries();
                 }
             }
@@ -222,18 +174,11 @@ namespace ReceiptVault
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
         }
 
-        public async static Task<BitmapImage> ImageFromBytes(Byte[] bytes)
-        {
-            BitmapImage image = new BitmapImage();
-            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
-            {
-                await stream.WriteAsync(bytes.AsBuffer());
-                stream.Seek(0);
-                await image.SetSourceAsync(stream);
-            }
-            return image;
-        }
-
+        /// <summary>
+        /// De volgende 2 methodes zijn voor als de gebruiker wil het vergrootte bonnetje weg hebben.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ImageBigReceiptOverlay_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             imageBigReceiptOverlay.Visibility = Visibility.Collapsed;

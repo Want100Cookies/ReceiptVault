@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Storage;
 using SQLite.Net;
 using SQLite.Net.Attributes;
@@ -14,7 +9,7 @@ using SQLite.Net.Platform.WinRT;
 namespace ReceiptVault
 {
     /// <summary>
-    /// Singleton class.
+    ///     Singleton class.
     /// </summary>
     public class EntryStore
     {
@@ -31,13 +26,13 @@ namespace ReceiptVault
             }
         }
 
-        public static EntryStore Instance 
+        public static EntryStore Instance
         {
             get { return instance ?? (instance = new EntryStore()); }
         }
 
         private static SQLiteConnection DbConnection => new SQLiteConnection(
-            new SQLitePlatformWinRT(), 
+            new SQLitePlatformWinRT(),
             Path.Combine(ApplicationData.Current.LocalFolder.Path, "Storage.sqlite"));
 
         public bool SaveEntry(Entry entry)
@@ -60,7 +55,8 @@ namespace ReceiptVault
         }
 
         /// <summary>
-        /// Get the entry from the database matchin with <param name="Id"></param>.
+        ///     Get the entry from the database matchin with.
+        ///     <param name="Id"></param>
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
@@ -75,7 +71,7 @@ namespace ReceiptVault
         }
 
         /// <summary>
-        /// Get all entries between the startDate and the endDate.
+        ///     Get all entries between the startDate and the endDate.
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -87,12 +83,11 @@ namespace ReceiptVault
                 db.TraceListener = new DebugTraceListener();
 
                 return db.Table<Entry>().Where(s => s.Date >= startDate
-                                                          && s.Date <= endDate).ToArray();
+                                                    && s.Date <= endDate).ToArray();
             }
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -105,12 +100,14 @@ namespace ReceiptVault
                 db.TraceListener = new DebugTraceListener();
 
                 return db.Table<Entry>().Where(s => s.Date >= startDate
-                                                          && s.Date <= endDate).Where(s => stores.Contains(s.StoreName)).ToArray();
+                                                    && s.Date <= endDate)
+                    .Where(s => stores.Contains(s.StoreName))
+                    .ToArray();
             }
         }
 
         /// <summary>
-        /// Get all entries from the database.
+        ///     Get all entries from the database.
         /// </summary>
         /// <returns>Array of entries.</returns>
         public Entry[] RetrieveEntry()
@@ -124,7 +121,7 @@ namespace ReceiptVault
         }
 
         /// <summary>
-        /// note: Pascal vragen of deze %searchText% doet.
+        ///     note: Pascal vragen of deze %searchText% doet.
         /// </summary>
         /// <param name="storeName"></param>
         /// <returns></returns>
@@ -139,10 +136,10 @@ namespace ReceiptVault
         }
 
         /// <summary>
-        /// Receive the names of the stores.
+        ///     Receive the names of the stores.
         /// </summary>
         /// <returns></returns>
-        public String[] getAllStoreNames()
+        public string[] getAllStoreNames()
         {
             using (var db = DbConnection)
             {
@@ -153,7 +150,7 @@ namespace ReceiptVault
         }
 
         /// <summary>
-        /// Returnt alle vat percentages die zijn ingevuld door een gebruiker.
+        ///     Returnt alle vat percentages die zijn ingevuld door een gebruiker.
         /// </summary>
         /// <returns></returns>
         public int[] getAllVatPercentages()

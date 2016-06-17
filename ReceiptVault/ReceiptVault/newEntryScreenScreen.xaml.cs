@@ -18,9 +18,6 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace ReceiptVault
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class newEntryScreen : Page
     {
         private readonly int[] dragStartPos;
@@ -36,11 +33,14 @@ namespace ReceiptVault
         //note: deze staat niet in de class diagram, maar is wel nodig:
         //is op dit moment de gebruiker aan het draggen? zo ja, pas het rode rechthoekje dan aan.
         private bool dragging;
+
+        //De foto die gemaakt wordt.
         private StorageFile photo;
 
+        //De imagepath naar de foto van het bonnetje.
         private string receipt;
 
-        //field to edit the value of textBoxTotal, heeft de ImageScan.
+        //field to edit the value of textBoxTotal, heeft de ImageScan nodig.
         public string total
         {
             get { return textBoxTotal.Text; }
@@ -60,11 +60,13 @@ namespace ReceiptVault
 
             picker.Date = DateTime.Now;
 
+            //Dit heeft te maken met de taal waarin de OCR moet gaan uitlezen.
             System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("nl-NL");
         }
 
         /// <summary>
         /// note: deze staat niet in de class diagram
+        /// Deze methode wordt gebruikt om het rechthoekje te tekenen.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -101,7 +103,14 @@ namespace ReceiptVault
                 dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. de winkel naam goed in.");
             }
 
-            if (textBoxVAT.Text.Trim().Equals("") || int.Parse(textBoxVAT.Text) > 99 || int.Parse(textBoxVAT.Text) < 0)
+            try
+            {
+                if (textBoxVAT.Text.Trim().Equals("") || int.Parse(textBoxVAT.Text) > 99 || int.Parse(textBoxVAT.Text) < 0)
+                {
+                    dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. het btw bedrag goed in.");
+                }
+            }
+            catch (Exception)
             {
                 dialogError = new MessageDialog("Er ging hier iets mis, vul a.u.b. het btw bedrag goed in.");
             }
@@ -146,10 +155,13 @@ namespace ReceiptVault
 
                 EntryStore.Instance.SaveEntry(entry);
                 isNewEntryAdded = true;
+
+                textBoxShopName.Text = textBoxTotal.Text = textBoxVAT.Text = "";
+                picker.Date = DateTime.Now;
             }
             catch (Exception)
             {
-                //er ging wat echt met iets als het parsen.
+                //er ging wat echt mis met iets als het parsen.
                 var error = new MessageDialog("Er is wat mis gegaan met het opslaan van de gegevens, zijn alle invoer velden correct ingevuld?");
                 await error.ShowAsync();
                 return;
@@ -173,15 +185,13 @@ namespace ReceiptVault
             if (photo == null)
             {
                 //User cancelled photo capture
-                Debug.WriteLine("photo = null");
                 return;
             }
 
             //image saven:
             var storageFile = await photo.CopyAsync(ApplicationData.Current.LocalFolder, "receipt.jpeg", NameCollisionOption.GenerateUniqueName);
-            Debug.WriteLine("De imagepath is: " + storageFile.Path.ToString());
+            Debug.WriteLine("De imagepath van de localstorage is: " + storageFile.Path.ToString());
             this.photo = photo;
-            //  Debug.WriteLine("image saved");
 
             receipt = storageFile.Path;
 
@@ -190,7 +200,6 @@ namespace ReceiptVault
             imgArrowFoto.Visibility = Visibility.Collapsed;
             imgArrowToPicture.Visibility = Visibility.Visible;
             TextBlockFeedback.Text = "Mooi, trek nu met uw muis een rechthoek \r\nom het totaalbedrag.";
-
         }
 
         /// <summary>
@@ -224,6 +233,12 @@ namespace ReceiptVault
             return bitmapImage;
         }
 
+        /// <summary>
+        /// Wanneer de user klikt op de picturebox en start met draggen.
+        /// note: de volgende 3 methodes hebben te maken met draggen.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void dragStart(object sender, PointerRoutedEventArgs e)
         {
             Debug.WriteLine("dragStart");
@@ -244,11 +259,8 @@ namespace ReceiptVault
         {
             if (dragging)
             {
-                //Debug.WriteLine("drag move");
                 dragFinishPos[0] = Convert.ToInt32(e.GetCurrentPoint(imgNewReceipt).Position.X);
                 dragFinishPos[1] = Convert.ToInt32(e.GetCurrentPoint(imgNewReceipt).Position.Y);
-
-                //Debug.WriteLine("moving... x, y: " + dragFinishPos[0] + ", " + dragFinishPos[1]);
                 
                 CompositionTarget_Rendering(sender, null);
             }
@@ -265,20 +277,22 @@ namespace ReceiptVault
 
             Debug.WriteLine("dragFinishPos: " + dragFinishPos[0].ToString() + ", " + dragFinishPos[1].ToString());
 
-            //note: deze is best pijnlijk...
             ImageScan scan = new ImageScan(new int[2,2] { {dragStartPos[0], dragStartPos[1] }, {dragFinishPos[0], dragFinishPos[1]} }, photo, this);
 
-            //note: dit gebeurt niet, denk dat de methode te vroeg wordt aangeroepen...
             textBoxTotal.Text = scan.getScannedText();
 
-            //receipt = scan.GetReceipt();
-            // Debug.WriteLine(receipt.ToString());
+            //stukje user interaction.
             imgArrowToPicture.Visibility = Visibility.Collapsed;
             imgArrowInput.Visibility = Visibility.Visible;
             TextBlockFeedback.Text = "Goed, vul nu de benodige gegevens in.";
             
         }
 
+        /// <summary>
+        /// de volgende 6 methodes zijn voor het menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void newRecieptClicked(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(newEntryScreen));
@@ -332,7 +346,11 @@ namespace ReceiptVault
             return image;
         }
 
-        //stukje autosuggest voor de winkels:
+        /// <summary>
+        /// Stukje autosuggest voor de winkels:
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void AutoSuggestBoxStoreName_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
@@ -362,9 +380,13 @@ namespace ReceiptVault
 
                 sender.ItemsSource = filteredStores;
             }
-        }      
+        }
 
-        //stukje autosuggest voor het btw bedrag:
+        /// <summary>
+        /// Stukje autosuggest voor het btw bedrag:
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void AutoSuggestBoxVAT_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)

@@ -1,26 +1,23 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
-
-
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace ReceiptVault
 {
     public sealed partial class VATScreen : Page
     {
-        private bool initialized = false;
-
+        //een initialized variable, die moet controleren of de essentiele controls zijn geïnitialiseerd.
+        //als dit niet gebruikt wordt, worden er hele vage errors gegeven.
+        private readonly bool initialized;
 
         public VATScreen()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             startPicker.Date = DateTime.Now.AddDays(-30);
             endPicker.Date = DateTime.Now;
             filterStoreName();
@@ -32,8 +29,8 @@ namespace ReceiptVault
         {
             if (initialized)
             {
-                string[] storeNames = new string[listBoxStores.Items.Count];
-                int i = 0;
+                var storeNames = new string[listBoxStores.Items.Count];
+                var i = 0;
                 if (listBoxStores.Items != null)
                 {
                     foreach (CheckBox checkBox in listBoxStores.Items)
@@ -53,11 +50,11 @@ namespace ReceiptVault
                     }
                 }
 
-                DateTimeOffset date = (DateTimeOffset) startPicker.Date;
-                DateTime startDateTime = date.DateTime;
+                var date = (DateTimeOffset) startPicker.Date;
+                var startDateTime = date.DateTime;
 
-                DateTimeOffset date2 = (DateTimeOffset) endPicker.Date;
-                DateTime endDateTime = date2.DateTime;
+                var date2 = (DateTimeOffset) endPicker.Date;
+                var endDateTime = date2.DateTime;
 
 
                 populateGraph(startDateTime, endDateTime, storeNames);
@@ -65,22 +62,21 @@ namespace ReceiptVault
         }
 
         /// <summary>
-        /// filter de listBoxStores op de inhoud van textBoxSearch.
-        /// note: werkt goed, deze mag rik ook hebben.
+        ///     filter de listBoxStores op de inhoud van textBoxSearch.
         /// </summary>
         private void filterStoreName()
         {
-            string[] stores = EntryStore.Instance.getAllStoreNames(); //return original data from Store
+            var stores = EntryStore.Instance.getAllStoreNames(); //return original data from Store
 
             listBoxStores.Items.Clear();
 
             if (!string.IsNullOrEmpty(textBoxSearch.Text))
             {
-                foreach (String storeName in stores)
+                foreach (var storeName in stores)
                 {
                     if (storeName.ToLower().Contains(textBoxSearch.Text.ToLower()))
                     {
-                        CheckBox check = new CheckBox();
+                        var check = new CheckBox();
                         check.Content = storeName;
                         check.Unchecked += Check_Checked;
                         check.Checked += Check_Checked;
@@ -90,9 +86,9 @@ namespace ReceiptVault
             }
             else
             {
-                foreach (string storeName in EntryStore.Instance.getAllStoreNames())
+                foreach (var storeName in EntryStore.Instance.getAllStoreNames())
                 {
-                    CheckBox check = new CheckBox();
+                    var check = new CheckBox();
                     check.Content = storeName;
                     check.Unchecked += Check_Checked;
                     check.Checked += Check_Checked;
@@ -103,18 +99,17 @@ namespace ReceiptVault
 
         private void Check_Checked(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("event fired");
             filterDate();
         }
 
         /// <summary>
-        /// Data uit de database rippen aan de hand van begin- en endDates.
+        ///     Data uit de database rippen aan de hand van begin- en endDates.
         /// </summary>
         private void populateGraph(DateTime beginDateTime, DateTime endDateTime, string[] storeNames)
         {
-            Dictionary<String, List<EntryStore.Entry>> chartDictionary = new Dictionary<string, List<EntryStore.Entry>>();
+            var chartDictionary = new Dictionary<string, List<EntryStore.Entry>>();
 
-            foreach (EntryStore.Entry entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime, storeNames))
+            foreach (var entry in EntryStore.Instance.RetrieveEntry(beginDateTime, endDateTime, storeNames))
             {
                 //this looks very weird. Deze regel haalt de tijd weg bij de dateTime, op deze manier staat worden de uitgaven per dag op geteld (en niet per dag + tijdstip).
                 entry.Date = entry.Date.Date;
@@ -128,13 +123,12 @@ namespace ReceiptVault
                 }
 
                 chartDictionary[entry.StoreName].Add(entry);
-
             }
 
             VATChart.Series.Clear();
 
-            int i = 0;
-            foreach (List<EntryStore.Entry> entries in chartDictionary.Values)
+            var i = 0;
+            foreach (var entries in chartDictionary.Values)
             {
                 Debug.WriteLine(VATChart.Series.Count);
 
@@ -171,26 +165,27 @@ namespace ReceiptVault
         //Loads the menubar
         private void newRecieptClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(newEntryScreen));
+            Frame.Navigate(typeof (newEntryScreen));
         }
 
         private void VATClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(VATScreen));
+            Frame.Navigate(typeof (VATScreen));
         }
 
         private void spendingsClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(spendingsScreen));
+            Frame.Navigate(typeof (spendingsScreen));
         }
 
         private void homeClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(MainPage), "False");
+            Frame.Navigate(typeof (MainPage), "False");
         }
 
         /// <summary>
-        /// note: de volgende twee events zijn voor het veranderen van de mouse pointer wanneer er een hover plaatsvind over 1 van de 4 menu items.        
+        ///     note: de volgende twee events zijn voor het veranderen van de mouse pointer wanneer er een hover plaatsvind over 1
+        ///     van de 4 menu items.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -206,7 +201,5 @@ namespace ReceiptVault
         }
 
         #endregion
-
-
     }
 }
